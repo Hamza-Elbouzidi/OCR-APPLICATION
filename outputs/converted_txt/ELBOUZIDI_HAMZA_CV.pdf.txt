@@ -1,0 +1,32 @@
+CA ENTER ELBOUZIDI HAMZA
+ IVERSITIES Futur ingénieur informatique
+ OBJECTIF
+ Dynamique, souriant, positif et bon communicant, je cherche un
+ nouveau défi en informatique, particuliérement en étude et
+ développement. J'apprécie les projets d'équipe dans un environnement CONTACT dynamique.
+ +212-64-2873734 COMPETENCES TECHNIQUES
+ V elbouzidihamza5@gmail.com LANGAGES ,FRAMEWORKS: PYTHON, C++, C#, JAVASCRIPT, HTML,
+ Marrakech CSS , JAVA, JFX, JEE, SPRINGBOOT, ASP.NET, PHP
+ BASE DE DONNEES: SQL ,ORACLE, PL/SQL in  ELBOUZIDI HAMZA OUTILS: GITHUB, LATEX, DOCKER.
+ INGENIEUR LOGICIEL: UML ,MERISE.  github.com/Hamza-Elbouzidi
+ AUTRE: ADMINISTRATION UNIX / WINDOWS/ORACLE, DEVOPS
+ EDUCATION STAGES PROFESSIONNEL
+ BC SKILLS GROUP O 01/07/2023-01/08/2023
+ O Ingénieur informatique et réseaux Ecole marocaine des sciences de I'ingénieur Congu et développé la gestion compléte de I'authentification
+ des clients, y compris I'enregistrement, la connexion, la gestion  (4éme année) Marrakech l 2022 -Présent des sessions et la récupération de mot de passe, pour un portail
+ de gestion de contrats. Environnement : PHp-Laravel. DTS DÉVELOPPEMENT INFORMATIQUE
+ ATLANTA SANAD ASSURANCE 01/03/2021 -01/04/ 2021 ISTA, NTIC SAFI - 2022
+ BACCALAUREAT PHYSIQUE CHIMIE Développement d'application qui permet de gérer des
+ données. Environnement ADO.NET LYCEE HASSAN 2 SAFI - 2019
+ PROJETS SCOLAIRES ET PERSONNELS CERTIFICATIONS
+ APPLICATION DE GESTION DE LOCATION DE VOITURE-PYTHON O Python for everybody Conception d'une application de location de voiture en milieu O  Software Engineering: Modeling Software Systems using UML. scolaire. Responsable de I'authentification, des réservations et de la génération des contrats. Environnement : PyQT-MysQL.
+ O  Cervical Cancer Risk Prediction Using APPLICATION DE GESTION D'UNE ÉCOLE-C# Machine Learning  Implémentation d'une application Desktop dans un projet 0 Social Skills by HONORIS scolaire. Chargé de la gestion des étudiants, des professeurs et LANGUES des absences. Environnement : ADO.NET
+ SITE WEB DE VENTE DES COURS EN LIGNE -JS
+ O ANGLAIS Conception d'un site web de vente de cours en ligne dans le
+ cadre d'un projet scolaire, avec fonctionnalités de recherche et 0  FRANCAIS d'organisation des cours. Environnement : PHP
+  ARABE APPLICATION DE GESTION DES COURSES TAXI-JAVA
+ Implémentation d'une application de demande de taxi LOISIR dans le cadre d'un projet scolaire, intégrant I'API Google Maps. Environnement : JFX.
+ O ART MARTIAUX APPLICATION DE GESTION DE BIBLIOTHEQUE -C#
+ Conception d'une application web de réservation et  FOOTBALL d'emprunt de livres dans le cadre d'un projet scolaire,
+ BASKETBALL avec intégration de la gestion de sessions et de la
+ génération de contrats. Environnement : AsP.NET O GAMING
