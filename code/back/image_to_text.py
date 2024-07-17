@@ -1,4 +1,4 @@
-input_dir = r'C:\Users\PC\Desktop\OCR with RAG BACK\images'
+input_dir = r'D:\Projects\Personal Projects\OCR-APPLICATION\images'
 
 def extract_phrases(paddle_output):
     try:

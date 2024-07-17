@@ -136,7 +136,7 @@
         }
 
         .file-name {
-            margin-right: 120px; /* Ajoute de l'espace entre le nom du fichier et l'icône de la poubelle */
+            margin-right: 120px;
         }
 
         .remove-file-icon {
@@ -158,11 +158,11 @@
                 <img class="upload-icon" src="https://img.icons8.com/plasticine/100/000000/upload.png" alt="Upload Icon">
                 <p class="dynamic-message">Drag and drop file here</p>
                 <label for="file-upload">or select a file from your computer</label>
-                <input type="file" id="file-upload" class="default-file-input" name="file">
+                <input type="file" id="file-upload" class="default-file-input" name="file" required>
             </div>
             <button class="upload-button">Upload</button>
             <div class="progress-bar"></div>
-            <div class="cannot-upload-message">Cannot upload file</div>
+            <div class="cannot-upload-message">Cannot upload file. Please select a file.</div>
             <div class="file-block">
                 <div class="file-details">
                     <span class="file-name"></span>
@@ -192,49 +192,55 @@
 
         fileInput.addEventListener("click", () => {
             fileInput.value = '';
+            cannotUploadMessage.style.display = "none"; // Reset error message
         });
 
         fileInput.addEventListener("change", e => {
-            uploadIcon.innerHTML = 'check_circle';
-            dragDropText.innerHTML = 'File Dropped Successfully!';
-            uploadButton.innerHTML = `Upload`;
-            fileName.innerHTML = fileInput.files[0].name;
-            fileSize.innerHTML = (fileInput.files[0].size/1024).toFixed(1) + " KB";
-            uploadedFile.style.display = "flex";
-            progressBar.style.width = 0;
-        });
-
-        uploadButton.addEventListener("click", () => {
-            let isFileUploaded = fileInput.value;
-            if(isFileUploaded != '') {
-                let formData = new FormData();
-                formData.append("file", fileInput.files[0]);
-                
-                let xhr = new XMLHttpRequest();
-                xhr.open("POST", "/uploader", true);
-
-                xhr.upload.onprogress = function(e) {
-                    if (e.lengthComputable) {
-                        let percentComplete = (e.loaded / e.total) * 100;
-                        progressBar.style.width = percentComplete + "%";
-                    }
-                };
-
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        uploadButton.innerHTML = `<span class="material-icons-outlined upload-button-icon"> check_circle </span> Uploaded`;
-                    } else {
-                        console.error("Upload failed. Status:", xhr.status);
-                    }
-                };
-
-                xhr.send(formData);
-            } else {
-                cannotUploadMessage.style.display = "flex";
+            if (fileInput.files.length > 0) {
+                uploadIcon.src = "https://img.icons8.com/ios-filled/100/007aff/check-circle.png"; // Updated icon
+                dragDropText.innerHTML = 'File Selected Successfully!';
+                uploadButton.innerHTML = `Upload`;
+                fileName.innerHTML = fileInput.files[0].name;
+                fileSize.innerHTML = (fileInput.files[0].size / 1024).toFixed(1) + " KB";
+                uploadedFile.style.display = "flex";
+                progressBar.style.width = 0;
+                cannotUploadMessage.style.display = "none"; // Hide error message
             }
         });
 
-        if(isAdvancedUpload) {
+        uploadButton.addEventListener("click", () => {
+            if (fileInput.files.length === 0) {
+                cannotUploadMessage.style.display = "flex";
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/uploader", true);
+
+            xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    let percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.style.width = percentComplete + "%";
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    uploadButton.innerHTML = `<i class="fas fa-check-circle"></i> Uploaded`;
+                    uploadButton.disabled = true; // Optionally disable the button after upload
+                } else {
+                    cannotUploadMessage.innerHTML = "Upload failed. Please try again.";
+                    cannotUploadMessage.style.display = "flex";
+                }
+            };
+
+            xhr.send(formData);
+        });
+
+        if (isAdvancedUpload) {
             ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"].forEach(evt => 
                 draggableFileArea.addEventListener(evt, e => {
                     e.preventDefault();
@@ -244,22 +250,23 @@
 
             ["dragover", "dragenter"].forEach(evt => {
                 draggableFileArea.addEventListener(evt, e => {
-                    uploadIcon.innerHTML = 'file_download';
+                    uploadIcon.src = "https://img.icons8.com/ios-filled/100/007aff/file-download.png";
                     dragDropText.innerHTML = 'Drop your file here!';
                 });
             });
 
             draggableFileArea.addEventListener("drop", e => {
-                uploadIcon.innerHTML = 'check_circle';
+                uploadIcon.src = "https://img.icons8.com/ios-filled/100/007aff/check-circle.png"; // Updated icon
                 dragDropText.innerHTML = 'File Dropped Successfully!';
                 uploadButton.innerHTML = `Upload`;
-                
+
                 let files = e.dataTransfer.files;
                 fileInput.files = files;
                 fileName.innerHTML = files[0].name;
-                fileSize.innerHTML = (files[0].size/1024).toFixed(1) + " KB";
+                fileSize.innerHTML = (files[0].size / 1024).toFixed(1) + " KB";
                 uploadedFile.style.display = "flex";
                 progressBar.style.width = 0;
+                cannotUploadMessage.style.display = "none"; // Hide error message
             });
         }
 

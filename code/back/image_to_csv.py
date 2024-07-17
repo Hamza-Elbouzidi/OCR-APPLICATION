@@ -4,7 +4,7 @@ import pandas as pd
 import tensorflow as tf
 from io import StringIO
 
-input_dir = r'C:\Users\PC\Desktop\OCR with RAG BACK\images'
+input_dir = r'D:\Projects\Personal Projects\OCR-APPLICATION\images'
 
 def intersection(box_1, box_2):
   return [box_2[0], box_1[1],box_2[2], box_1[3]]
