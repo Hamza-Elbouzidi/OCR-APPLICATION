@@ -6,8 +6,8 @@ import os
 import magic
 from prompt import ask
 
-input_dir = r'C:\Users\PC\Desktop\OCR with RAG BACK\documents'
-images_dir = r'C:\Users\PC\Desktop\OCR with RAG BACK\images'
+input_dir = r'D:\Projects\Personal Projects\OCR-APPLICATION\documents'
+images_dir = r'D:\Projects\Personal Projects\OCR-APPLICATION\images'
 ocr = PaddleOCR(lang='fr')
 
 #requests = 'numero de facture, \ntotals, \nnoms des produits et leurs quantite, \nconditions de paiement, \nadresses, '

@@ -2,8 +2,8 @@ import os
 from paddleocr import PaddleOCR
 import magic
 
-base_output_dir = r'C:\Users\pc\Documents\code\OCR with RAG BACK\outputs\texts'
-input_dir = r'C:\Users\pc\Documents\code\OCR with RAG BACK\images'
+base_output_dir = r'D:\Projects\Personal Projects\OCR-APPLICATION\outputs\texts'
+input_dir = r'D:\Projects\Personal Projects\OCR-APPLICATION\images'
 
 def is_image(file_path):
     try:
