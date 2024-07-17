@@ -9,5 +9,9 @@ def ask(requests, text, csv):
     },
     ])
     response = response['message']['content']
+    print(f'Text: {text}')
+    print(f'CSV: {csv}')
+
 
     return response
+
