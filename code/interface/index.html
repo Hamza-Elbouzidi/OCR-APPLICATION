@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload File</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f86bd, black);
+            position: relative;
+        }
+
+        .form-wrapper {
+            background: #ffffff;
+            width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .form-wrapper h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333333;
+        }
+
+        .form-wrapper input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+        }
+
+        .drag-file-area {
+            border: 2px dashed #007aff;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .drag-file-area:hover {
+            background-color: #f9f9f9;
+        }
+
+        .drag-file-area img {
+            width: 80px;
+            margin-bottom: 10px;
+        }
+
+        .drag-file-area p {
+            font-size: 16px;
+            color: #333333;
+        }
+
+        .drag-file-area label {
+            display: inline-block;
+            margin-top: 10px;
+            cursor: pointer;
+            color: #007aff;
+            font-weight: bold;
+        }
+
+        .drag-file-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-button {
+            background: #007aff;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .upload-button:hover {
+            background: #005bb5;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .logo img {
+            width: 100px;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 5px;
+            background-color: #007aff;
+            margin-top: 10px;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .cannot-upload-message {
+            display: none;
+            color: red;
+        }
+
+        .file-block {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .file-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .file-name {
+            margin-right: 120px; /* Ajoute de l'espace entre le nom du fichier et l'icône de la poubelle */
+        }
+
+        .remove-file-icon {
+            cursor: pointer;
+            color: #ff4d4d;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://seeklogo.com/images/C/cbi-logo-AE7D35EAC7-seeklogo.com.png" alt="Logo de l'entreprise">
+        </div>
+        <div class="form-wrapper">
+            <h2>File Upload!</h2>
+            <input type="text" id="search" placeholder="Search in file">
+            <div class="drag-file-area">
+                <img class="upload-icon" src="https://img.icons8.com/plasticine/100/000000/upload.png" alt="Upload Icon">
+                <p class="dynamic-message">Drag and drop file here</p>
+                <label for="file-upload">or select a file from your computer</label>
+                <input type="file" id="file-upload" class="default-file-input" name="file">
+            </div>
+            <button class="upload-button">Upload</button>
+            <div class="progress-bar"></div>
+            <div class="cannot-upload-message">Cannot upload file</div>
+            <div class="file-block">
+                <div class="file-details">
+                    <span class="file-name"></span>
+                    <span class="file-size"></span>
+                    <span class="remove-file-icon"><i class="fas fa-trash"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var isAdvancedUpload = function() {
+            var div = document.createElement('div');
+            return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+        }();
+
+        let draggableFileArea = document.querySelector(".drag-file-area");
+        let fileInput = document.getElementById("file-upload");
+        let uploadIcon = document.querySelector(".upload-icon");
+        let dragDropText = document.querySelector(".dynamic-message");
+        let progressBar = document.querySelector(".progress-bar");
+        let uploadButton = document.querySelector(".upload-button");
+        let cannotUploadMessage = document.querySelector(".cannot-upload-message");
+        let uploadedFile = document.querySelector(".file-block");
+        let fileName = document.querySelector(".file-name");
+        let fileSize = document.querySelector(".file-size");
+        let removeFileButton = document.querySelector(".remove-file-icon");
+
+        fileInput.addEventListener("click", () => {
+            fileInput.value = '';
+        });
+
+        fileInput.addEventListener("change", e => {
+            uploadIcon.innerHTML = 'check_circle';
+            dragDropText.innerHTML = 'File Dropped Successfully!';
+            uploadButton.innerHTML = `Upload`;
+            fileName.innerHTML = fileInput.files[0].name;
+            fileSize.innerHTML = (fileInput.files[0].size/1024).toFixed(1) + " KB";
+            uploadedFile.style.display = "flex";
+            progressBar.style.width = 0;
+        });
+
+        uploadButton.addEventListener("click", () => {
+            let isFileUploaded = fileInput.value;
+            if(isFileUploaded != '') {
+                let formData = new FormData();
+                formData.append("file", fileInput.files[0]);
+                
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "/uploader", true);
+
+                xhr.upload.onprogress = function(e) {
+                    if (e.lengthComputable) {
+                        let percentComplete = (e.loaded / e.total) * 100;
+                        progressBar.style.width = percentComplete + "%";
+                    }
+                };
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        uploadButton.innerHTML = `<span class="material-icons-outlined upload-button-icon"> check_circle </span> Uploaded`;
+                    } else {
+                        console.error("Upload failed. Status:", xhr.status);
+                    }
+                };
+
+                xhr.send(formData);
+            } else {
+                cannotUploadMessage.style.display = "flex";
+            }
+        });
+
+        if(isAdvancedUpload) {
+            ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"].forEach(evt => 
+                draggableFileArea.addEventListener(evt, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+            );
+
+            ["dragover", "dragenter"].forEach(evt => {
+                draggableFileArea.addEventListener(evt, e => {
+                    uploadIcon.innerHTML = 'file_download';
+                    dragDropText.innerHTML = 'Drop your file here!';
+                });
+            });
+
+            draggableFileArea.addEventListener("drop", e => {
+                uploadIcon.innerHTML = 'check_circle';
+                dragDropText.innerHTML = 'File Dropped Successfully!';
+                uploadButton.innerHTML = `Upload`;
+                
+                let files = e.dataTransfer.files;
+                fileInput.files = files;
+                fileName.innerHTML = files[0].name;
+                fileSize.innerHTML = (files[0].size/1024).toFixed(1) + " KB";
+                uploadedFile.style.display = "flex";
+                progressBar.style.width = 0;
+            });
+        }
+
+        removeFileButton.addEventListener("click", () => {
+            uploadedFile.style.display = "none";
+            fileInput.value = '';
+            uploadIcon.src = "https://img.icons8.com/plasticine/100/000000/upload.png";
+            dragDropText.innerHTML = 'Drag and drop file here';
+            progressBar.style.width = 0;
+        });
+    </script>
+</body>
+</html>
