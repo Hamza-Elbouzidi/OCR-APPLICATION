@@ -1,8 +1,8 @@
 #to be removed
-from paddleocr import PaddleOCR
+from paddleocr import PaddleOCR # type: ignore
 import os
 
-input_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\converted_images'
+input_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\converted_images'
 
 def extract_phrases(paddle_output):
     try:

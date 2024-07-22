@@ -1,10 +1,10 @@
 import os
-import magic
-from pdf2image import convert_from_path
-import comtypes.client
+import magic # type: ignore
+from pdf2image import convert_from_path # type: ignore
+import comtypes.client # type: ignore
 import shutil
 
-base_output_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\converted_images'
+base_output_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\converted_images'
 
 def get_file_type(file_path):
     try:

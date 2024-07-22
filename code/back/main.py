@@ -1,9 +1,9 @@
 from file_to_image import file_to_image
 from image_to_text import extract_text
 from image_to_csv import extract_csv
-from paddleocr import PaddleOCR
+from paddleocr import PaddleOCR # type: ignore
 import os
-import magic
+import magic # type: ignore
 import shutil
 from prompt import ask
 
@@ -56,8 +56,8 @@ def delete_temp_files():
         paths_to_delete.append(os.path.join(images_dir, i))
     delete_csv_outputs = False   # to be deleted later
     if delete_csv_outputs:
-        for i in os.listdir(r'C:\Users\pc\Documents\code\OCR-APPLICATION\csv_outputs'):
-            paths_to_delete.append(os.path.join(r'C:\Users\pc\Documents\code\OCR-APPLICATION\csv_outputs', i))
+        for i in os.listdir(r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\csv_outputs'):
+            paths_to_delete.append(os.path.join(r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\csv_outputs', i))
     # Delete temp paths
     for path in paths_to_delete:
         if os.path.isfile(path):

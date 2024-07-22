@@ -7,9 +7,13 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# @app.route('/')
+# def index():
+#    return render_template('index.html')
+
 @app.route('/')
-def index():
-    return render_template('index.html')
+def admin_login():
+    return render_template('Admin_login.html')
 
 @app.route('/uploader', methods=['POST'])
 def upload_file():
