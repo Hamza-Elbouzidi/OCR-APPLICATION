@@ -2,7 +2,7 @@
 from paddleocr import PaddleOCR # type: ignore
 import os
 
-input_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\converted_images'
+input_dir = os.path.join(os.getcwd(), 'converted_images')
 
 def extract_phrases(paddle_output):
     try:
@@ -48,10 +48,9 @@ def extract_text(paddle_output):
 
 def main():
     ocr = PaddleOCR(lang='fr')
-    images_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\converted_images'
     images_paths = []
-    for d in os.listdir(images_dir):
-        d_path = os.path.join(images_dir, d)
+    for d in os.listdir(input_dir):
+        d_path = os.path.join(input_dir, d)
         if os.path.isfile(d_path):
             images_paths.append(d_path)
         else:

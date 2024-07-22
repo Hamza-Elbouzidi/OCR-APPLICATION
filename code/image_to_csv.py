@@ -7,8 +7,8 @@ from io import StringIO
 from paddleocr import PaddleOCR # type: ignore
 import os
 
-base_output_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\csv_outputs' #to be removed
-input_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\converted_images'
+base_output_dir = os.path.join(os.getcwd(), 'csv_outputs') #to be removed
+input_dir = os.path.join(os.getcwd(), 'converted_images')
 
 def intersection(box_1, box_2):
   return [box_2[0], box_1[1],box_2[2], box_1[3]]
@@ -140,10 +140,9 @@ def extract_csv(image_path, paddle_output):
 
 def main():
     ocr = PaddleOCR(lang='fr')
-    images_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\converted_images'
     images_paths = []
-    for d in os.listdir(images_dir):
-        d_path = os.path.join(images_dir, d)
+    for d in os.listdir(input_dir):
+        d_path = os.path.join(input_dir, d)
         if os.path.isfile(d_path):
             images_paths.append(d_path)
         else:

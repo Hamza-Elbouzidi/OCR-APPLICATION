@@ -40,12 +40,8 @@ def get_images_paths():
 
 def prepare_directories():
     # make directories if they don't exist
-    if not os.path.exists(images_dir):
-        os.mkdir(images_dir)
-    if not os.path.exists(input_dir):
-        os.mkdir(input_dir)
-    if not os.path.exists(csv_dir):
-        os.mkdir(csv_dir)
+    os.makedirs(images_dir, exist_ok=True)
+    os.makedirs(csv_dir, exist_ok=True)
 
 def delete_temp_files():
     # List temp paths
@@ -56,8 +52,8 @@ def delete_temp_files():
         paths_to_delete.append(os.path.join(images_dir, i))
     delete_csv_outputs = False   # to be deleted later
     if delete_csv_outputs:
-        for i in os.listdir(r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\csv_outputs'):
-            paths_to_delete.append(os.path.join(r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\csv_outputs', i))
+        for i in os.listdir(csv_dir):
+            paths_to_delete.append(os.path.join(csv_dir, i))
     # Delete temp paths
     for path in paths_to_delete:
         if os.path.isfile(path):

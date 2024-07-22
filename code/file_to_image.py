@@ -4,7 +4,7 @@ from pdf2image import convert_from_path # type: ignore
 import comtypes.client # type: ignore
 import shutil
 
-base_output_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\converted_images'
+base_output_dir = os.path.join(os.getcwd(), 'converted_images')
 
 def get_file_type(file_path):
     try:
@@ -13,7 +13,6 @@ def get_file_type(file_path):
         return file_type
     except Exception as e:
         print(f'Error getting {file_path} file type: {e}')
-
 
 def convert_pdf_to_images(pdf_path, output_dir):
     try:
