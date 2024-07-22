@@ -1,14 +1,14 @@
 import cv2
 import numpy as np
 import pandas as pd 
-import tensorflow as tf
+import tensorflow as tf # type: ignore
 from io import StringIO
 #to be removed
-from paddleocr import PaddleOCR
+from paddleocr import PaddleOCR # type: ignore
 import os
 
-base_output_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\csv_outputs' #to be removed
-input_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\converted_images'
+base_output_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\csv_outputs' #to be removed
+input_dir = r'C:\Users\hajar\OneDrive\Bureau\OCR-APPLICATION\converted_images'
 
 def intersection(box_1, box_2):
   return [box_2[0], box_1[1],box_2[2], box_1[3]]
