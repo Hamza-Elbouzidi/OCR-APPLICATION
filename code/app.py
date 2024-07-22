@@ -4,7 +4,7 @@ import os
 app = Flask(__name__)
 
 # Ensure the upload folder exists
-UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # @app.route('/')
