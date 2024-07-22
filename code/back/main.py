@@ -7,8 +7,12 @@ import magic
 import shutil
 from prompt import ask
 
-input_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\uploads'
-images_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\converted_images'
+parent_path = os.getcwd()
+
+input_dir = os.path.join(parent_path, 'uploads')
+images_dir = os.path.join(parent_path, 'converted_images')
+csv_dir = os.path.join(parent_path, 'csv_outputs')
+
 ocr = PaddleOCR(lang='fr')
 
 requests = 'totals hors tva'
@@ -34,6 +38,15 @@ def get_images_paths():
                     images_paths.append(f_path)
     return images_paths
 
+def prepare_directories():
+    # make directories if they don't exist
+    if not os.path.exists(images_dir):
+        os.mkdir(images_dir)
+    if not os.path.exists(input_dir):
+        os.mkdir(input_dir)
+    if not os.path.exists(csv_dir):
+        os.mkdir(csv_dir)
+
 def delete_temp_files():
     # List temp paths
     paths_to_delete = []
@@ -41,7 +54,7 @@ def delete_temp_files():
         paths_to_delete.append(os.path.join(input_dir, i))
     for i in os.listdir(images_dir):
         paths_to_delete.append(os.path.join(images_dir, i))
-    delete_csv_outputs = True   # to be deleted later
+    delete_csv_outputs = False   # to be deleted later
     if delete_csv_outputs:
         for i in os.listdir(r'C:\Users\pc\Documents\code\OCR-APPLICATION\csv_outputs'):
             paths_to_delete.append(os.path.join(r'C:\Users\pc\Documents\code\OCR-APPLICATION\csv_outputs', i))
@@ -53,6 +66,9 @@ def delete_temp_files():
             shutil.rmtree(path)
 
 def main():
+    # Prepare directories
+    prepare_directories()
+
     # Convert documents to images
     file_to_image(input_dir)
     
@@ -63,7 +79,7 @@ def main():
         if is_image(image_path):
             # Perform OCR and extract data
             paddle_output = ocr.ocr(image_path)[0]
-            text = extract_text(image_path)  # Call the function to extract text
+            text = extract_text(paddle_output)  # Call the function to extract text
             csv = extract_csv(image_path, paddle_output)  # Convert to CSV
             
             # preview OCR outputs

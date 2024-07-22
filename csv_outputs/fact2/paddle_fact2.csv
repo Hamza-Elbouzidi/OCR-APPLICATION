@@ -1,0 +1,21 @@
+,0,1,2,3,4
+0,FACTURE,,,,
+1,Facture n°12345,06/01/25,,,
+2,CÉLIA NAUDIN,,,,A L'ATTENTION DE
+3,123-456-7890,,,,Concordia
+4,hello@reallygreatsite.com,,,,123-456-7890
+5,reallygreatsite.com,,,,"Anywhere St., Any City"
+6,"123 Anywhere St., Any City",,,,
+7,DESCRIPTION,,PRIX,QUANTITE,TOTAL
+8,Création de logo,,900 €,01,900 €
+9,Conception d'un flyer,,300 £,01,300 €
+10,Carte de visite,,300 €,03,900 £
+11,Illustration personnalisée,,200 £,04,800 €
+12,Refonte du site web,,1 500 €,01,1500 €
+13,Banniere publicitaire,,250 €,01,250 €
+14,,,,Sous total :,4 650 €
+15,,,,TVA (20%) :,930 €
+16,,,,TOTAL :,5 580 €
+17,Paiement a l'ordre de Célia Naudin,,,,Conditions de paiement
+18,N° de compte 0123 4567 8901 2345,,,,Paiement sous 30 jours
+19,,MERCI DE VOTRE CONFIANCE,,,
