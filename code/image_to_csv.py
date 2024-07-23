@@ -7,8 +7,9 @@ from io import StringIO
 from paddleocr import PaddleOCR # type: ignore
 import os
 
-base_output_dir = os.path.join(os.getcwd(), 'csv_outputs') #to be removed
-input_dir = os.path.join(os.getcwd(), 'converted_images')
+parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) #to be removed
+base_output_dir = os.path.join(parent_path, 'csv_outputs')
+input_dir = os.path.join(parent_path, 'converted_images')
 
 def intersection(box_1, box_2):
   return [box_2[0], box_1[1],box_2[2], box_1[3]]

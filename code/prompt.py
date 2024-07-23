@@ -12,6 +12,4 @@ def ask(requests, text, csv):
     print(f'Text: {text}')
     print(f'CSV: {csv}')
 
-
     return response
-
