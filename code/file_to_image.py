@@ -4,7 +4,8 @@ from pdf2image import convert_from_path # type: ignore
 import comtypes.client # type: ignore
 import shutil
 
-base_output_dir = os.path.join(os.getcwd(), 'converted_images')
+parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+base_output_dir = os.path.join(parent_path, 'converted_images')
 
 def get_file_type(file_path):
     try:
@@ -61,5 +62,5 @@ def file_to_image(input_dir):
         process_file(file_path)
 
 if __name__ == "__main__":
-    input_dir = r'C:\Users\pc\Documents\code\OCR-APPLICATION\uploads'
+    input_dir = os.path.join(parent_path, 'uploads')
     file_to_image(input_dir)

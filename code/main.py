@@ -7,11 +7,13 @@ import magic # type: ignore
 import shutil
 from prompt import ask
 
-parent_path = os.getcwd()
+parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 input_dir = os.path.join(parent_path, 'uploads')
 images_dir = os.path.join(parent_path, 'converted_images')
 csv_dir = os.path.join(parent_path, 'csv_outputs')
+os.makedirs(images_dir, exist_ok=True)
+os.makedirs(csv_dir, exist_ok=True)
 
 ocr = PaddleOCR(lang='fr')
 
@@ -38,14 +40,10 @@ def get_images_paths():
                     images_paths.append(f_path)
     return images_paths
 
-def prepare_directories():
-    # make directories if they don't exist
-    os.makedirs(images_dir, exist_ok=True)
-    os.makedirs(csv_dir, exist_ok=True)
-
 def delete_temp_files():
     # List temp paths
     paths_to_delete = []
+    paths_to_delete.append(os.path.join(parent_path, 'code/__pycache__'))
     for i in os.listdir(input_dir):
         paths_to_delete.append(os.path.join(input_dir, i))
     for i in os.listdir(images_dir):
@@ -62,9 +60,6 @@ def delete_temp_files():
             shutil.rmtree(path)
 
 def main():
-    # Prepare directories
-    prepare_directories()
-
     # Convert documents to images
     file_to_image(input_dir)
     

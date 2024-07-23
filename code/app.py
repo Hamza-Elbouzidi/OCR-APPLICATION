@@ -4,16 +4,17 @@ import os
 app = Flask(__name__)
 
 # Ensure the upload folder exists
-UPLOAD_FOLDER = os.path.join(os.getcwd, 'uploads')
+parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+UPLOAD_FOLDER = os.path.join(parent_path, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# @app.route('/')
-# def index():
-#    return render_template('index.html')
-
 @app.route('/')
-def admin_login():
-    return render_template('Admin_login.html')
+def index():
+   return render_template('index.html')
+
+# @app.route('/')
+# def admin_login():
+#     return render_template('Admin_login.html')
 
 @app.route('/uploader', methods=['POST'])
 def upload_file():

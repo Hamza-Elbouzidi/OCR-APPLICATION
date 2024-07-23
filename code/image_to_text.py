@@ -2,7 +2,8 @@
 from paddleocr import PaddleOCR # type: ignore
 import os
 
-input_dir = os.path.join(os.getcwd(), 'converted_images')
+parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+input_dir = os.path.join(parent_path, 'converted_images')
 
 def extract_phrases(paddle_output):
     try:
