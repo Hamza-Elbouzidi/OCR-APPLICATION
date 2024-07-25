@@ -1,11 +1,8 @@
 import os
-import magic # type: ignore
-from pdf2image import convert_from_path # type: ignore
-import comtypes.client # type: ignore
+import magic
+from pdf2image import convert_from_path
+import comtypes.client
 import shutil
-
-parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-base_output_dir = os.path.join(parent_path, 'converted_images')
 
 def get_file_type(file_path):
     try:
@@ -40,7 +37,7 @@ def convert_docx_to_images(docx_path, output_dir):
     convert_pdf_to_images(pdf_path, output_dir)
     os.remove(pdf_path)
 
-def process_file(file_path):
+def process_file(file_path, base_output_dir):
     file_name = os.path.splitext(os.path.basename(file_path))[0]
     output_dir = os.path.join(base_output_dir, file_name)
     os.makedirs(output_dir, exist_ok=True)
@@ -56,11 +53,13 @@ def process_file(file_path):
         os.removedirs(output_dir)
         print(f'Unsupported file type: {file_type} for file {file_path}')
 
-def file_to_image(input_dir):
+def file_to_image(input_dir, base_output_dir):
     file_paths = [os.path.join(input_dir, f) for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
     for file_path in file_paths:
-        process_file(file_path)
+        process_file(file_path, base_output_dir)
 
-if __name__ == "__main__":
+if __name__ == "__main__": #to be deleted
+    parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base_output_dir = os.path.join(parent_path, 'converted_images')
     input_dir = os.path.join(parent_path, 'uploads')
     file_to_image(input_dir)

@@ -1,10 +1,3 @@
-#to be removed
-from paddleocr import PaddleOCR # type: ignore
-import os
-
-parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-input_dir = os.path.join(parent_path, 'converted_images')
-
 def extract_phrases(paddle_output):
     try:
         # Sorting paddle data
@@ -47,7 +40,7 @@ def extract_text(paddle_output):
     except Exception as e:
         print(f"Error executing the program: {e}")
 
-def main():
+def main(): #to be deleted
     ocr = PaddleOCR(lang='fr')
     images_paths = []
     for d in os.listdir(input_dir):
@@ -63,5 +56,9 @@ def main():
        paddle_output = ocr.ocr(image_path)[0]
        print(extract_text(paddle_output))
 
-if __name__ == '__main__':
+if __name__ == '__main__': #to be deleted
+    import os
+    from paddleocr import PaddleOCR # type: ignore
+    parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    input_dir = os.path.join(parent_path, 'converted_images')
     main()
