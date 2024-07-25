@@ -10,15 +10,23 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+   return render_template('index.html')
 
-@app.route('/admin_interface')
-def admin_interface():
-    return render_template('Admin_interface.html')
 
-@app.route('/admin_login')
-def admin_login():
-    return render_template('Admin_login.html')
+#   @app.route('/')
+#  def  admin_interface():
+#    return render_template('Admin_interface.html')
+
+
+
+
+# @app.route('/')
+# def admin_login():
+#     return render_template('Admin_login.html')
+
+
+
+
 
 @app.route('/uploader', methods=['POST'])
 def upload_file():
