@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for, request
 import os
 import shutil
 import magic
@@ -7,6 +7,7 @@ from paddle_to_text import extract_text
 from paddle_to_csv import extract_csv
 from paddleocr import PaddleOCR
 from prompt import ask
+import json
 
 app = Flask(__name__)
 
@@ -15,10 +16,12 @@ parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 uploads_dir = os.path.join(parent_path, 'uploads')
 converted_images_dir = os.path.join(parent_path, 'converted_images')
 csv_files_dir = os.path.join(parent_path, 'csv_outputs')
+json_files_dir = os.path.join(parent_path, 'json_outputs')
 
 os.makedirs(uploads_dir, exist_ok=True)
 os.makedirs(converted_images_dir, exist_ok=True)
 os.makedirs(csv_files_dir, exist_ok=True)
+os.makedirs(json_files_dir, exist_ok=True)
 
 ocr = PaddleOCR(lang='fr')
 
@@ -43,6 +46,36 @@ def get_images_paths():
                     images_paths.append(f_path)
     return images_paths
 
+def save_json_file(text, image_path):
+    json_name = f'{os.path.splitext(os.path.basename(image_path))[0]}'
+    output_file_name = f"{json_name}.json"
+    index = 1
+    output_file_path = os.path.join(json_files_dir, output_file_name)
+    while os.path.exists(output_file_path):
+        output_file_name = f"{json_name}_{index}.json"
+        output_file_path = os.path.join(json_files_dir, output_file_name)
+        index += 1   
+
+    start_index = text.find('{')
+    end_index = text.rfind('}') + 1
+
+    if start_index != -1 and end_index != -1:
+        json_content = text[start_index:end_index]
+        try:
+            data = json.loads(json_content)
+            with open(output_file_path, 'w') as file:
+                json.dump(data, file, indent=4)
+            return output_file_path
+        except json.JSONDecodeError:
+            return {}
+    return {}
+
+def load_json_data():
+    if os.path.exists(json_path):  # Fixed variable name
+        with open(json_path, 'r') as f:
+            return json.load(f)
+    return {}
+
 def delete_temp_files():
     paths_to_delete = []
     paths_to_delete.append(os.path.join(parent_path, 'code/__pycache__'))
@@ -50,7 +83,7 @@ def delete_temp_files():
         paths_to_delete.append(os.path.join(uploads_dir, i))
     for i in os.listdir(converted_images_dir):
         paths_to_delete.append(os.path.join(converted_images_dir, i))
-    delete_csv_outputs = False
+    delete_csv_outputs = True
     if delete_csv_outputs:
         for i in os.listdir(csv_files_dir):
             paths_to_delete.append(os.path.join(csv_files_dir, i))
@@ -72,9 +105,6 @@ def upload_file():
     file = request.files['file']
     card_data = request.form['cardData']
 
-    # Ensure the uploads directory exists
-    os.makedirs(uploads_dir, exist_ok=True)
-
     # Save the uploaded file
     file_path = os.path.join(uploads_dir, file.filename)
     file.save(file_path)
@@ -84,8 +114,8 @@ def upload_file():
 
     # Get paths of converted images
     images_paths = get_images_paths()
-    
-    answer = None
+    global json_path
+    # answer = None
     for image_path in images_paths:
         if is_image(image_path):
             # Perform OCR and extract data
@@ -94,9 +124,79 @@ def upload_file():
             csv = extract_csv(paddle_output, image_path, csv_files_dir)
             
             # Ask the LLM about the extracted data
-            answer = ask(card_data, text, csv)
-            print(answer)
-
+            # answer = ask(card_data, text, csv)
+            # print(answer)
+            json_path = save_json_file(answer, image_path)
     delete_temp_files()
+    return redirect(url_for('preview'))
+
+@app.route('/preview')
+def preview():
+    json_data = load_json_data()  # Load data for output route
+    return render_template('preview.html', json_data=json_data)
+
+@app.route('/edit')
+def edit():
+    json_data = load_json_data()  # Load data for edit route
+    return render_template('edit.html', json_data=json_data)
+
 if __name__ == '__main__':
+    # to not generate an answer each time when testing
+    answer = """
+    I will extract the requested information with precision and accuracy. Here are the results in JSON format:
+
+    ```
+    {
+    "invoice_id": "INV2024-0002",
+    "client": {
+        "name": "Alice Martin",
+        "company": "Tech Solutions",
+        "contact": {
+        "email": "alice.martin@techsolutions.com",
+        "phone": "+33 1 98 76 54 32"
+        },
+        "address": "789 Business Rd., Tech City"
+    },
+    "date": "2024-07-26",
+    "due_date": "2024-08-09",
+    "items": [
+        {
+        "description": "Software Development",
+        "quantity": 50,
+        "unit_price": "100 €",
+        "total": "5 000 €"
+        },
+        {
+        "description": "UI/UX Design",
+        "quantity": 20,
+        "unit_price": "80 €",
+        "total": "1 600 €"
+        },
+        {
+        "description": "Project Management",
+        "quantity": 15,
+        "unit_price": "120 €",
+        "total": "1 800 €"
+        }
+    ],
+    "subtotal": "8 400 €",
+    "tax": "1 680 €",
+    "total_due": "10 080 €",
+    "payment_terms": "Payment due within 14 days of invoice date.",
+    "notes": "Thank you for your business. Please contact us if you have any questions about this invoice.",
+    "attachments": [
+        {
+        "type": "pdf",
+        "url": "https://example.com/invoice2024-0001.pdf"
+        },
+        {
+        "type": "image",
+        "url": "https://example.com/receipt2024-0001.png"
+        }
+    ]
+    }
+    ```
+
+    I have carefully extracted the requested information without modifying or adding any values. I have only extracted the exact information specified in the provided text and CSV files, and presented it in a concise JSON format.
+    """
     app.run(host='0.0.0.0', port=5000, debug=True)

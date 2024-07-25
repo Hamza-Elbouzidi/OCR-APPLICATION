@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extracted Data</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #8F9FE4, black);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .content-wrapper {
+            background: #ffffff;
+            width: 90%;
+            max-width: 700px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .content-wrapper h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #8F9FE4;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .json-content {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .json-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .json-content li {
+            background: #fff;
+            margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .json-content strong {
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .button-group .save-btn {
+            background-color: #8F9FE4;
+        }
+
+        .button-group .save-btn:hover {
+            background-color: #6f82c3;
+        }
+
+        .button-group .edit-btn {
+            background-color: #8F9FE4;
+        }
+
+        .button-group .edit-btn:hover {
+            background-color: #6f82c3;
+        }
+
+        .button-group .back-btn {
+            background-color: #bbb;
+            color: #333;
+        }
+
+        .button-group .back-btn:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Extracted Data</h1>
+            {% if json_data %}
+                {% macro render_item(item) %}
+                    {% if item is mapping %}
+                        <ul>
+                            {% for subkey, subvalue in item.items() %}
+                                <li><strong>{{ subkey }}:</strong> {{ render_item(subvalue) }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% elif item is iterable and not item is string %}
+                        {% if item and item[0] is mapping %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        {% for header in item[0].keys() %}
+                                            <th>{{ header | capitalize }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in item %}
+                                        <tr>
+                                            {% for cell in row.values() %}
+                                                <td>{{ cell }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <ul>
+                                {% for subitem in item %}
+                                    <li>{{ render_item(subitem) }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% else %}
+                        {{ item }}
+                    {% endif %}
+                {% endmacro %}
+                
+                {% for key, value in json_data.items() %}
+                    <div class="section">
+                        <h2>{{ key | capitalize }}</h2>
+                        <div class="json-content">
+                            {{ render_item(value) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="section">
+                    <p>No data found</p>
+                </div>
+            {% endif %}
+            <div class="button-group">
+                <button class="save-btn" onclick="window.location.href='/save'">Sauvegarder</button>
+                <button class="edit-btn" onclick="window.location.href='/edit'">Modifier</button>
+                <button class="back-btn" onclick="window.location.href='/'">Retour</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
