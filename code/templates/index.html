@@ -53,7 +53,7 @@
             text-align: center;
             transition: all 0.3s ease-in-out;
             border: 2px solid transparent;
-            border-color: #BCA5D;
+            border-color: #BCA5D0;
             cursor: pointer;
         }
         
@@ -88,7 +88,6 @@
             color: #666666;
             margin-top: 10px;
         }
-        
 
         .form-wrapper h2 {
             margin-bottom: 20px;
@@ -237,151 +236,112 @@
             </div>
         </div>
         <div class="cards-wrapper">
-            <div class="card" data-card-id="facture">
+            <div class="card" data-card-id="date-de-facture - montant-total">
                 <h3>Facture</h3>
-                <p>date de facture</p>
-                <p>Montant total</p>
             </div>
-            <div class="card" data-card-id="bon-livraison">
+            <div class="card" data-card-id="address-livraison - nom-client">
                 <h3>Bon de Livraison</h3>
-                <p>Nom du produit</p>
-                <p>Quantité</p>
             </div>
-            <div class="card" data-card-id="bon-commande">
-                <h3>Bon de Commande</h3>
-                <p>Nom de produit</p>
-                <p>Quantité</p>
+            <div class="card" data-card-id="objectif - stages">
+                <h3>RH</h3>
             </div>
             <div class="card" data-card-id="document-entreprise">
                 <h3>Document entreprise</h3>
-                <p>Nom de entreprise</p>
-                <p>Adresse entreprise</p>
             </div>
-            
         </div>
     </div>
 
     <script>
-        var isAdvancedUpload = function() {
-            var div = document.createElement('div');
-            return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
-        }();
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileUploadInput = document.getElementById('file-upload');
+            const uploadButton = document.querySelector('.upload-button');
+            const progressBar = document.querySelector('.progress-bar');
+            const dynamicMessage = document.querySelector('.dynamic-message');
+            const cannotUploadMessage = document.querySelector('.cannot-upload-message');
+            const fileBlock = document.querySelector('.file-block');
+            const fileNameElement = document.querySelector('.file-name');
+            const fileSizeElement = document.querySelector('.file-size');
+            const removeFileIcon = document.querySelector('.remove-file-icon');
 
-        let draggableFileArea = document.querySelector(".drag-file-area");
-        let fileInput = document.querySelector("#file-upload");
-        let uploadButton = document.querySelector(".upload-button");
-        let progressBar = document.querySelector(".progress-bar");
-        let cannotUploadMessage = document.querySelector(".cannot-upload-message");
-        let uploadedFile = document.querySelector(".file-block");
-        let fileName = document.querySelector(".file-name");
-        let fileSize = document.querySelector(".file-size");
-        let removeFileIcon = document.querySelector(".remove-file-icon");
-        let cards = document.querySelectorAll(".card");
-        let selectedCards = new Set();
+            let selectedFile = null;
+            let selectedCardData = '';
 
-        if (isAdvancedUpload) {
-            draggableFileArea.classList.add('has-advanced-upload');
-            draggableFileArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                draggableFileArea.classList.add('is-dragover');
-                dragDropText.textContent = 'Release to upload';
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    cards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedCardData = card.dataset.cardId; // Ensure this is correctly assigned
+                    console.log("Selected Card Data:", selectedCardData); // For debugging
+                    updateUploadButtonState();
+                });
             });
-            draggableFileArea.addEventListener('dragleave', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                draggableFileArea.classList.remove('is-dragover');
-                dragDropText.textContent = 'Drag and drop file here';
-            });
-            draggableFileArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                draggableFileArea.classList.remove('is-dragover');
-                dragDropText.textContent = 'Drag and drop file here';
-                let files = e.dataTransfer.files;
-                if (files.length) {
-                    fileInput.files = files;
-                    handleFileSelection(files[0]);
-                }
-            });
-        }
 
-        fileInput.addEventListener('change', function(e) {
-            let files = e.target.files;
-            if (files.length) {
-                handleFileSelection(files[0]);
-            }
-        });
-
-        function handleFileSelection(file) {
-            uploadedFile.style.display = "flex";
-            fileName.textContent = file.name;
-            fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
-            updateUploadButtonState();
-        }
-
-        removeFileIcon.addEventListener('click', function() {
-            fileInput.value = "";
-            uploadedFile.style.display = "none";
-            updateUploadButtonState();
-        });
-
-        cards.forEach(card => {
-            card.addEventListener('click', function() {
-                card.classList.toggle('selected');
-                let cardId = card.getAttribute('data-card-id');
-                if (selectedCards.has(cardId)) {
-                    selectedCards.delete(cardId);
+            function updateUploadButtonState() {
+                if (selectedFile && selectedCardData) {
+                    uploadButton.classList.add('enabled');
+                    uploadButton.disabled = false;
                 } else {
-                    selectedCards.add(cardId);
+                    uploadButton.classList.remove('enabled');
+                    uploadButton.disabled = true;
                 }
+            }
+
+            fileUploadInput.addEventListener('change', (event) => {
+                if (event.target.files.length > 0) {
+                    selectedFile = event.target.files[0];
+                    fileNameElement.textContent = selectedFile.name;
+                    fileSizeElement.textContent = `${(selectedFile.size / 1024).toFixed(2)} KB`;
+                    fileBlock.style.display = 'block';
+                    updateUploadButtonState();
+                }
+            });
+
+            removeFileIcon.addEventListener('click', () => {
+                selectedFile = null;
+                fileUploadInput.value = '';
+                fileBlock.style.display = 'none';
                 updateUploadButtonState();
             });
-        });
 
-        function updateUploadButtonState() {
-            if (fileInput.files.length > 0 && selectedCards.size > 0) {
-                uploadButton.classList.add('enabled');
-            } else {
-                uploadButton.classList.remove('enabled');
-            }
-        }
-
-        uploadButton.addEventListener("click", () => {
-            if (!uploadButton.classList.contains('enabled')) {
-                cannotUploadMessage.style.display = "flex";
-                return;
-            }
-
-            let formData = new FormData();
-            formData.append("file", fileInput.files[0]);
-
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", "/uploader", true);
-
-            xhr.upload.onprogress = function(e) {
-                if (e.lengthComputable) {
-                    let percentComplete = (e.loaded / e.total) * 100;
-                    progressBar.style.width = percentComplete + "%";
-                }
-            };
-
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    uploadButton.innerHTML = `<i class="fas fa-check-circle"></i> Uploaded`;
-                    uploadButton.disabled = true; // Optionnel : désactiver le bouton après upload
+            uploadButton.addEventListener('click', () => {
+                if (selectedFile && selectedCardData) {
+                    uploadFile(selectedFile, selectedCardData);
                 } else {
-                    cannotUploadMessage.innerHTML = "Upload failed. Please try again.";
-                    cannotUploadMessage.style.display = "flex";
+                    cannotUploadMessage.style.display = 'block';
                 }
-            };
+            });
 
-            xhr.onerror = function() {
-                cannotUploadMessage.innerHTML = "An error occurred. Please try again.";
-                cannotUploadMessage.style.display = "flex";
-            };
+            function uploadFile(file, cardData) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('cardData', cardData);  // Ensure cardData is correctly appended
 
-            xhr.send(formData);
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/upload', true);
+
+                xhr.upload.addEventListener('progress', (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = (event.loaded / event.total) * 100;
+                        progressBar.style.width = percentComplete + '%';
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        progressBar.style.width = '100%';
+                        dynamicMessage.textContent = 'File uploaded successfully!';
+                    } else {
+                        dynamicMessage.textContent = 'Upload failed.';
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    dynamicMessage.textContent = 'Upload failed.';
+                });
+
+                xhr.send(formData);
+            }
         });
     </script>
 </body>
