@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Your existing CSS styles here */
         body {
             margin: 0;
             padding: 0;
@@ -20,7 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #0f86bd, black);
+            background: linear-gradient(135deg, #8F9FE4, black);
             position: relative;
         }
 
@@ -31,12 +32,68 @@
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             text-align: center;
+            margin-right: 60px; /* Réduit l'espace entre le formulaire et les cartes */
         }
+
+        .cards-wrapper {
+            display: flex;
+            flex-wrap: wrap; /* Permet aux cartes de se déplacer vers la ligne suivante */
+            gap: 20px; /* Espace entre les cartes */
+            justify-content: flex-start; /* Alignement des cartes à gauche */
+            width: calc(50% - 40px); /* Ajuste la largeur du conteneur en tenant compte des espacements */
+        }
+
+        .card {
+            background: #ffffff;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            border: 2px solid transparent;
+            border-color: #BCA5D;
+            cursor: pointer;
+        }
+        
+        .card.selected {
+            background-color: white; /* Correction de la couleur de fond pour les cartes sélectionnées */
+            color: white;
+            border-color: #3DB74E; 
+            transform: translateY(-10px); /* Applique l'effet de survol */
+            box-shadow: 0 8px 16px #BACBFE; /* Applique l'effet de survol */
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px #8a9bab;
+            border-color: #BADFD7;
+        }
+        
+        .card.selected:hover {
+            /* Si vous souhaitez que le style survol appliqué aux cartes sélectionnées soit différent, vous pouvez le définir ici */
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px #8a9bab;
+            border-color: #3DB74E;
+        }
+        
+        .card h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #8F9FE4;
+        }
+        
+        .card p {
+            color: #666666;
+            margin-top: 10px;
+        }
+        
 
         .form-wrapper h2 {
             margin-bottom: 20px;
             font-size: 24px;
-            color: #333333;
+            color: #8F9FE4;
         }
 
         .form-wrapper input[type="text"] {
@@ -54,6 +111,7 @@
             text-align: center;
             margin-bottom: 20px;
             transition: all 0.3s;
+            height: 260px;
         }
 
         .drag-file-area:hover {
@@ -83,17 +141,25 @@
         }
 
         .upload-button {
-            background: #007aff;
+            background: #3DB74E; /* Couleur verte */
             color: #ffffff;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 20px;
+            opacity: 0.6; /* Start as disabled */
+            pointer-events: none; /* Disable pointer events */
         }
 
-        .upload-button:hover {
-            background: #005bb5;
+        .upload-button.enabled {
+            opacity: 1; /* Enabled state */
+            pointer-events: auto; /* Enable pointer events */
+        }
+
+        .upload-button:hover.enabled {
+            background: #2b8a3e; /* Couleur plus foncée au survol */
         }
 
         .logo {
@@ -148,12 +214,11 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="https://seeklogo.com/images/C/cbi-logo-AE7D35EAC7-seeklogo.com.png" alt="Logo de l'entreprise">
-        </div>
         <div class="form-wrapper">
+            <div class="logo">
+                <img src="https://seeklogo.com/images/C/cbi-logo-AE7D35EAC7-seeklogo.com.png" alt="Logo de l'entreprise">
+            </div>
             <h2>File Upload!</h2>
-            <input type="text" id="search" placeholder="Search in file">
             <div class="drag-file-area">
                 <img class="upload-icon" src="https://img.icons8.com/plasticine/100/000000/upload.png" alt="Upload Icon">
                 <p class="dynamic-message">Drag and drop file here</p>
@@ -171,7 +236,31 @@
                 </div>
             </div>
         </div>
+        <div class="cards-wrapper">
+            <div class="card" data-card-id="facture">
+                <h3>Facture</h3>
+                <p>date de facture</p>
+                <p>Montant total</p>
+            </div>
+            <div class="card" data-card-id="bon-livraison">
+                <h3>Bon de Livraison</h3>
+                <p>Nom du produit</p>
+                <p>Quantité</p>
+            </div>
+            <div class="card" data-card-id="bon-commande">
+                <h3>Bon de Commande</h3>
+                <p>Nom de produit</p>
+                <p>Quantité</p>
+            </div>
+            <div class="card" data-card-id="document-entreprise">
+                <h3>Document entreprise</h3>
+                <p>Nom de entreprise</p>
+                <p>Adresse entreprise</p>
+            </div>
+            
+        </div>
     </div>
+
     <script>
         var isAdvancedUpload = function() {
             var div = document.createElement('div');
@@ -179,37 +268,87 @@
         }();
 
         let draggableFileArea = document.querySelector(".drag-file-area");
-        let fileInput = document.getElementById("file-upload");
-        let uploadIcon = document.querySelector(".upload-icon");
-        let dragDropText = document.querySelector(".dynamic-message");
-        let progressBar = document.querySelector(".progress-bar");
+        let fileInput = document.querySelector("#file-upload");
         let uploadButton = document.querySelector(".upload-button");
+        let progressBar = document.querySelector(".progress-bar");
         let cannotUploadMessage = document.querySelector(".cannot-upload-message");
         let uploadedFile = document.querySelector(".file-block");
         let fileName = document.querySelector(".file-name");
         let fileSize = document.querySelector(".file-size");
-        let removeFileButton = document.querySelector(".remove-file-icon");
+        let removeFileIcon = document.querySelector(".remove-file-icon");
+        let cards = document.querySelectorAll(".card");
+        let selectedCards = new Set();
 
-        fileInput.addEventListener("click", () => {
-            fileInput.value = '';
-            cannotUploadMessage.style.display = "none"; // Reset error message
-        });
+        if (isAdvancedUpload) {
+            draggableFileArea.classList.add('has-advanced-upload');
+            draggableFileArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                draggableFileArea.classList.add('is-dragover');
+                dragDropText.textContent = 'Release to upload';
+            });
+            draggableFileArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                draggableFileArea.classList.remove('is-dragover');
+                dragDropText.textContent = 'Drag and drop file here';
+            });
+            draggableFileArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                draggableFileArea.classList.remove('is-dragover');
+                dragDropText.textContent = 'Drag and drop file here';
+                let files = e.dataTransfer.files;
+                if (files.length) {
+                    fileInput.files = files;
+                    handleFileSelection(files[0]);
+                }
+            });
+        }
 
-        fileInput.addEventListener("change", e => {
-            if (fileInput.files.length > 0) {
-                uploadIcon.src = "https://img.icons8.com/ios-filled/100/007aff/check-circle.png"; // Updated icon
-                dragDropText.innerHTML = 'File Selected Successfully!';
-                uploadButton.innerHTML = `Upload`;
-                fileName.innerHTML = fileInput.files[0].name;
-                fileSize.innerHTML = (fileInput.files[0].size / 1024).toFixed(1) + " KB";
-                uploadedFile.style.display = "flex";
-                progressBar.style.width = 0;
-                cannotUploadMessage.style.display = "none"; // Hide error message
+        fileInput.addEventListener('change', function(e) {
+            let files = e.target.files;
+            if (files.length) {
+                handleFileSelection(files[0]);
             }
         });
 
+        function handleFileSelection(file) {
+            uploadedFile.style.display = "flex";
+            fileName.textContent = file.name;
+            fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+            updateUploadButtonState();
+        }
+
+        removeFileIcon.addEventListener('click', function() {
+            fileInput.value = "";
+            uploadedFile.style.display = "none";
+            updateUploadButtonState();
+        });
+
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                card.classList.toggle('selected');
+                let cardId = card.getAttribute('data-card-id');
+                if (selectedCards.has(cardId)) {
+                    selectedCards.delete(cardId);
+                } else {
+                    selectedCards.add(cardId);
+                }
+                updateUploadButtonState();
+            });
+        });
+
+        function updateUploadButtonState() {
+            if (fileInput.files.length > 0 && selectedCards.size > 0) {
+                uploadButton.classList.add('enabled');
+            } else {
+                uploadButton.classList.remove('enabled');
+            }
+        }
+
         uploadButton.addEventListener("click", () => {
-            if (fileInput.files.length === 0) {
+            if (!uploadButton.classList.contains('enabled')) {
                 cannotUploadMessage.style.display = "flex";
                 return;
             }
@@ -230,52 +369,19 @@
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     uploadButton.innerHTML = `<i class="fas fa-check-circle"></i> Uploaded`;
-                    uploadButton.disabled = true; // Optionally disable the button after upload
+                    uploadButton.disabled = true; // Optionnel : désactiver le bouton après upload
                 } else {
                     cannotUploadMessage.innerHTML = "Upload failed. Please try again.";
                     cannotUploadMessage.style.display = "flex";
                 }
             };
 
+            xhr.onerror = function() {
+                cannotUploadMessage.innerHTML = "An error occurred. Please try again.";
+                cannotUploadMessage.style.display = "flex";
+            };
+
             xhr.send(formData);
-        });
-
-        if (isAdvancedUpload) {
-            ["drag", "dragstart", "dragend", "dragover", "dragenter", "dragleave", "drop"].forEach(evt => 
-                draggableFileArea.addEventListener(evt, e => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                })
-            );
-
-            ["dragover", "dragenter"].forEach(evt => {
-                draggableFileArea.addEventListener(evt, e => {
-                    uploadIcon.src = "https://img.icons8.com/ios-filled/100/007aff/file-download.png";
-                    dragDropText.innerHTML = 'Drop your file here!';
-                });
-            });
-
-            draggableFileArea.addEventListener("drop", e => {
-                uploadIcon.src = "https://img.icons8.com/ios-filled/100/007aff/check-circle.png"; // Updated icon
-                dragDropText.innerHTML = 'File Dropped Successfully!';
-                uploadButton.innerHTML = `Upload`;
-
-                let files = e.dataTransfer.files;
-                fileInput.files = files;
-                fileName.innerHTML = files[0].name;
-                fileSize.innerHTML = (files[0].size / 1024).toFixed(1) + " KB";
-                uploadedFile.style.display = "flex";
-                progressBar.style.width = 0;
-                cannotUploadMessage.style.display = "none"; // Hide error message
-            });
-        }
-
-        removeFileButton.addEventListener("click", () => {
-            uploadedFile.style.display = "none";
-            fileInput.value = '';
-            uploadIcon.src = "https://img.icons8.com/plasticine/100/000000/upload.png";
-            dragDropText.innerHTML = 'Drag and drop file here';
-            progressBar.style.width = 0;
         });
     </script>
 </body>
