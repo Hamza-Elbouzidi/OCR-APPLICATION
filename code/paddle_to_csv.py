@@ -1,15 +1,12 @@
 import cv2
 import numpy as np
 import pandas as pd 
-import tensorflow as tf # type: ignore
+import tensorflow as tf
 from io import StringIO
-#to be removed
-from paddleocr import PaddleOCR # type: ignore
 import os
 
 parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) #to be removed
-base_output_dir = os.path.join(parent_path, 'csv_outputs')
-input_dir = os.path.join(parent_path, 'converted_images')
+converted_images_dir = os.path.join(parent_path, 'converted_images')
 
 def intersection(box_1, box_2):
   return [box_2[0], box_1[1],box_2[2], box_1[3]]
@@ -106,23 +103,23 @@ def save_to_csv_var(array):
       except Exception as e:
         print(f"Error saving text to file: {e}")
 
-def save_to_csv_file(array, input_file): #to be deleted
+def save_to_csv_file(array, input_file, csv_files_dir): #to be deleted
       try:
         csv_name = f'{os.path.splitext(os.path.basename(input_file))[0]}'
-        output_file_name = f"paddle_{csv_name}.csv"
+        output_file_name = f"{csv_name}.csv"
         parent_dir_name = os.path.basename(os.path.dirname(input_file))
 
-        if os.path.dirname(input_file) == input_dir:
-            output_dir = base_output_dir
+        if os.path.dirname(input_file) == converted_images_dir:
+            output_dir = csv_files_dir
         else:
-            output_dir = os.path.join(base_output_dir, parent_dir_name)
+            output_dir = os.path.join(csv_files_dir, parent_dir_name)
             if not os.path.exists(output_dir):
                 os.mkdir(output_dir)
         
         index = 1
         output_file_path = os.path.join(output_dir, output_file_name)
         while os.path.exists(output_file_path):
-            output_file_name = f"paddle_{csv_name}_{index}.csv"
+            output_file_name = f"{csv_name}_{index}.csv"
             output_file_path = os.path.join(output_dir, output_file_name)
             index += 1   
 
@@ -130,11 +127,11 @@ def save_to_csv_file(array, input_file): #to be deleted
       except Exception as e:
         print(f"Error saving text to file: {e}")
 
-def extract_csv(image_path, paddle_output):
+def extract_csv(paddle_output, image_path, csv_files_dir):
     try:
         csv_array = extract_in_array(image_path, paddle_output)
         text_only = save_to_csv_var(csv_array)
-        save_to_csv_file(csv_array, image_path) #to be deleted
+        save_to_csv_file(csv_array, image_path, csv_files_dir) #to be deleted
         return text_only
     except Exception as e:
         print(f"Error executing the program: {e}")
@@ -142,8 +139,10 @@ def extract_csv(image_path, paddle_output):
 def main():
     ocr = PaddleOCR(lang='fr')
     images_paths = []
-    for d in os.listdir(input_dir):
-        d_path = os.path.join(input_dir, d)
+    for d in os.listdir(converted_images_dir
+  ):
+        d_path = os.path.join(converted_images_dir
+      , d)
         if os.path.isfile(d_path):
             images_paths.append(d_path)
         else:
@@ -156,4 +155,5 @@ def main():
        print(extract_csv(image_path, paddle_output))
 
 if __name__ == '__main__':
-    main()
+  from paddleocr import PaddleOCR # type: ignore
+  main()
