@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extracted Data</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #8F9FE4, black);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .content-wrapper {
+            background: #ffffff;
+            width: 90%;
+            max-width: 700px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .content-wrapper h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #8F9FE4;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .json-content {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .json-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .json-content li {
+            background: #fff;
+            margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .json-content li input {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .json-content strong {
+            color: #555;
+        }
+
+        .add-item {
+            color: #8F9FE4;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .remove-item {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        td input {
+            width: 100%;
+            border: none;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+
+        td input:focus {
+            outline: none;
+            border-bottom: 2px solid #8F9FE4;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .button-group .save-btn {
+            background-color: #8F9FE4;
+        }
+
+        .button-group .save-btn:hover {
+            background-color: #6f82c3;
+        }
+
+        .button-group .back-btn {
+            background-color: #bbb;
+            color: #333;
+        }
+
+        .button-group .back-btn:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Extracted Data</h1>
+            {% if json_data %}
+                {% macro render_item(item, key=None) %}
+                    {% if item is mapping %}
+                        <ul>
+                            {% for subkey, subvalue in item.items() %}
+                                <li><strong>{{ subkey }}:</strong> {{ render_item(subvalue, subkey) }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% elif item is iterable and not item is string %}
+                        {% if item and item[0] is mapping %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        {% for header in item[0].keys() %}
+                                            <th>{{ header | capitalize }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in item %}
+                                        <tr>
+                                            {% for cell in row.values() %}
+                                                <td><input type="text" value="{{ cell }}"></td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <ul>
+                                {% for index, subitem in item %}
+                                    <li>
+                                        <input type="text" value="{{ subitem }}">
+                                        <i class="fas fa-plus add-item" onclick="addItem(this, '{{ key }}')"></i>
+                                        <i class="fas fa-minus remove-item" onclick="removeItem(this)"></i>
+                                        {{ render_item(subitem) }}
+                                    </li>
+                                {% endfor %}
+                                <li>
+                                    <input type="text" placeholder="Add new item">
+                                    <i class="fas fa-plus add-item" onclick="addItem(this, '{{ key }}')"></i>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% else %}
+                        <input type="text" value="{{ item }}">
+                    {% endif %}
+                {% endmacro %}
+                
+                {% for key, value in json_data.items() %}
+                    <div class="section">
+                        <h2>{{ key | capitalize }}</h2>
+                        <div class="json-content">
+                            {{ render_item(value, key) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="section">
+                    <p>No data found</p>
+                </div>
+            {% endif %}
+            <div class="button-group">
+                <button class="save-btn" onclick="window.location.href='/save'">Sauvegarder</button>
+                <button class="back-btn" onclick="window.location.href='/preview'">Retour</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addItem(element, key) {
+            var newItem = document.createElement('li');
+            newItem.innerHTML = '<input type="text" placeholder="Add new item"><i class="fas fa-plus add-item" onclick="addItem(this, \'' + key + '\')"></i><i class="fas fa-minus remove-item" onclick="removeItem(this)"></i>';
+            element.parentNode.parentNode.appendChild(newItem);
+        }
+
+        function removeItem(element) {
+            element.parentNode.remove();
+        }
+
+        function saveData() {
+            var data = {};
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function(section) {
+                var key = section.querySelector('h2').innerText.toLowerCase();
+                var value = parseSection(section.querySelector('.json-content').firstChild);
+                data[key] = value;
+            });
+
+            fetch('/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => {
+                if (response.ok) {
+                    alert('Data saved successfully!');
+                } else {
+                    alert('Failed to save data.');
+                }
+            });
+        }
+
+        function parseSection(element) {
+            if (element.tagName === 'UL') {
+                var list = [];
+                element.querySelectorAll('li').forEach(function(li) {
+                    var input = li.querySelector('input');
+                    if (input) {
+                        list.push(input.value);
+                    }
+                });
+                return list;
+            } else if (element.tagName === 'TABLE') {
+                var table = [];
+                var rows = element.querySelectorAll('tbody tr');
+                rows.forEach(function(row) {
+                    var cells = row.querySelectorAll('td');
+                    var obj = {};
+                    cells.forEach(function(cell, index) {
+                        obj[element.querySelector('th:nth-child(' + (index + 1) + ')').innerText.toLowerCase()] = cell.querySelector('input').value;
+                    });
+                    table.push(obj);
+                });
+                return table;
+            } else if (element.querySelector('input')) {
+                return element.querySelector('input').value;
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>
