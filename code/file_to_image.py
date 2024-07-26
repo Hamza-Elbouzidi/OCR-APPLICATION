@@ -15,8 +15,9 @@ def get_file_type(file_path):
 def convert_pdf_to_images(pdf_path, output_dir):
     try:
         pages = convert_from_path(pdf_path)
+        pdf_name = os.path.splitext(os.path.basename(pdf_path))[0]
         for i, page in enumerate(pages):
-            output_path = os.path.join(output_dir, f'page_{i + 1}.png')
+            output_path = os.path.join(output_dir, f'{pdf_name}_page_{i + 1}.png')
             page.save(output_path, 'PNG')
     except Exception as e:
         print(f'Error converting {pdf_path} to image: {e}')
@@ -57,9 +58,3 @@ def file_to_image(input_dir, base_output_dir):
     file_paths = [os.path.join(input_dir, f) for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
     for file_path in file_paths:
         process_file(file_path, base_output_dir)
-
-if __name__ == "__main__": #to be deleted
-    parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    base_output_dir = os.path.join(parent_path, 'converted_images')
-    input_dir = os.path.join(parent_path, 'uploads')
-    file_to_image(input_dir)
