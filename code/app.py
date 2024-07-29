@@ -1,15 +1,18 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, request
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 import os
 import shutil
 import magic
+import json
+from db.db import db, Card
 from file_to_image import file_to_image
 from paddle_to_text import extract_text
 from paddle_to_csv import extract_csv
 from paddleocr import PaddleOCR
 from prompt import ask
-import json
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:/Projects/Personal Projects/OCR-APPLICATION/code/instance/cards.db'
+db.init_app(app)
 
 parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -95,7 +98,30 @@ def delete_temp_files():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    cards = Card.query.all()
+    app.logger.debug('Cards retrieved: %s', cards)
+    for card in cards:
+        card.data_ids = json.loads(card.data_ids)
+    return render_template('index.html', cards=cards)
+
+
+
+@app.route('/admin/cards/add', methods=['POST'])
+def add_card():
+    title = request.form['title']
+    data_ids = json.dumps(request.form.getlist('data_ids'))  # Handle multiple data fields
+    new_card = Card(title=title, data_ids=data_ids)
+    db.session.add(new_card)
+    db.session.commit()
+    return redirect(url_for('admin_cards'))
+
+@app.route('/admin/cards/update/<int:card_id>', methods=['POST'])
+def update_card(card_id):
+    card = Card.query.get(card_id)
+    card.title = request.form['title']
+    card.data_ids = json.dumps(request.form.getlist('data_ids'))
+    db.session.commit()
+    return redirect(url_for('admin_cards'))
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -125,8 +151,8 @@ def upload_file():
             csv = extract_csv(paddle_output, image_path, csv_files_dir)
             
             # Ask the LLM about the extracted data
-            answer = ask(card_data, text, csv)
-            print(answer)
+            # answer = ask(card_data, text, csv)
+            # print(answer)
             json_path = save_json_file(answer, image_path)
     delete_temp_files()
     return redirect(url_for('preview'))
@@ -142,4 +168,4 @@ def edit():
     return render_template('edit.html', json_data=json_data)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+     app.run(host='0.0.0.0', port=5000, debug=True)
