@@ -29,18 +29,11 @@
             </div>
         </div>
         <div class="cards-wrapper">
-            <div class="card" data-card-id="numero de la facture, \ntotal">
-                <h3>Facture</h3>
-            </div>
-            <div class="card" data-card-id="address-livraison - nom-client">
-                <h3>Bon de Livraison</h3>
-            </div>
-            <div class="card" data-card-id="objectif - stages">
-                <h3>RH</h3>
-            </div>
-            <div class="card" data-card-id="document-entreprise">
-                <h3>Document entreprise</h3>
-            </div>
+            {% for card in cards %}
+                <div class="card" data-card-ids="{{ card.data_ids|tojson }}">
+                    <h3>{{ card.title }}</h3>
+                </div>
+            {% endfor %}
         </div>
     </div>
 

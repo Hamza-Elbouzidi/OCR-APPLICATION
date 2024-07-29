@@ -1,0 +1,20 @@
+{
+    "0": "Mod\u00e9le de facture Word Debitoor",
+    "1": "Debitoor",
+    "2": "75017 Paris",
+    "3": "France",
+    "4": "FACTURE",
+    "5": "Client Date de facture 1 janvier 2020",
+    "6": "70 avenue de Clichy Numero de facture 0000002",
+    "7": "Conditions de paiement 14 jours",
+    "8": "France Date d'\u00e9ch\u00e9ance 15 janvier 2020",
+    "9": "T\u00e9l: 06 XXX XXX XXX",
+    "10": {
+        "11": "Nom du produit ou service Unit\u00e9 20646\u20ac",
+        "12": "TOTAL NET 20646\u20ac"
+    },
+    "13": "Debitoor 70 avenue de Clichy75017 Paris France Email: team@debitoor.fr T\u00e9I: 06 XX XX XX Site web: www.debitoor.fr N\u00b0 SIREN: XXXXXXXXX",
+    "14": {
+        "15": "Logiciel de facturation en ligne Debitoor www.debitoor.fr"
+    }
+}
