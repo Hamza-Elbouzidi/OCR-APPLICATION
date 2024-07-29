@@ -39,26 +39,3 @@ def extract_text(paddle_output):
     
     except Exception as e:
         print(f"Error executing the program: {e}")
-
-def main(): #to be deleted
-    ocr = PaddleOCR(lang='fr')
-    images_paths = []
-    for d in os.listdir(input_dir):
-        d_path = os.path.join(input_dir, d)
-        if os.path.isfile(d_path):
-            images_paths.append(d_path)
-        else:
-            for f in os.listdir(d_path):
-                f_path = os.path.join(d_path, f)
-                if os.path.isfile(f_path):
-                    images_paths.append(f_path)
-    for image_path in images_paths:
-       paddle_output = ocr.ocr(image_path)[0]
-       print(extract_text(paddle_output))
-
-if __name__ == '__main__': #to be deleted
-    import os
-    from paddleocr import PaddleOCR # type: ignore
-    parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    input_dir = os.path.join(parent_path, 'converted_images')
-    main()

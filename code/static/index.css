@@ -1,0 +1,211 @@
+/* Your existing CSS styles here */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #8F9FE4, black);
+    position: relative;
+}
+
+.form-wrapper {
+    background: #ffffff;
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-right: 60px; /* Réduit l'espace entre le formulaire et les cartes */
+}
+
+.cards-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Permet aux cartes de se déplacer vers la ligne suivante */
+    gap: 20px; /* Espace entre les cartes */
+    justify-content: flex-start; /* Alignement des cartes à gauche */
+    width: calc(50% - 40px); /* Ajuste la largeur du conteneur en tenant compte des espacements */
+}
+
+.card {
+    background: #ffffff;
+    width: calc(33.333% - 20px);
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid transparent;
+    border-color: #BCA5D0;
+    cursor: pointer;
+}
+
+.card.selected {
+    background-color: white; /* Correction de la couleur de fond pour les cartes sélectionnées */
+    color: white;
+    border-color: #3DB74E; 
+    transform: translateY(-10px); /* Applique l'effet de survol */
+    box-shadow: 0 8px 16px #BACBFE; /* Applique l'effet de survol */
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px #8a9bab;
+    border-color: #BADFD7;
+}
+
+.card.selected:hover {
+    /* Si vous souhaitez que le style survol appliqué aux cartes sélectionnées soit différent, vous pouvez le définir ici */
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px #8a9bab;
+    border-color: #3DB74E;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #8F9FE4;
+}
+
+.card p {
+    color: #666666;
+    margin-top: 10px;
+}
+
+.form-wrapper h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #8F9FE4;
+}
+
+.form-wrapper input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+}
+
+.drag-file-area {
+    border: 2px dashed #007aff;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    height: 260px;
+}
+
+.drag-file-area:hover {
+    background-color: #f9f9f9;
+}
+
+.drag-file-area img {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.drag-file-area p {
+    font-size: 16px;
+    color: #333333;
+}
+
+.drag-file-area label {
+    display: inline-block;
+    margin-top: 10px;
+    cursor: pointer;
+    color: #007aff;
+    font-weight: bold;
+}
+
+.drag-file-area input[type="file"] {
+    display: none;
+}
+
+.upload-button {
+    background: #3DB74E; /* Couleur verte */
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    opacity: 0.6; /* Start as disabled */
+    pointer-events: none; /* Disable pointer events */
+}
+
+.upload-button.enabled {
+    opacity: 1; /* Enabled state */
+    pointer-events: auto; /* Enable pointer events */
+}
+
+.upload-button:hover.enabled {
+    background: #2b8a3e; /* Couleur plus foncée au survol */
+}
+
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.logo img {
+    width: 100px;
+}
+
+.progress-bar {
+    width: 0;
+    height: 5px;
+    background-color: #007aff;
+    margin-top: 10px;
+    border-radius: 5px;
+    transition: width 0.5s ease-in-out;
+}
+
+.cannot-upload-message {
+    display: none;
+    color: red;
+}
+
+.file-block {
+    display: none;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.file-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-name {
+    margin-right: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.file-size {
+    margin-right: 20px;
+    color: #666;
+}
+
+.remove-file-icon {
+    cursor: pointer;
+    color: #ff4d4d;
+    font-size: 20px;
+}
