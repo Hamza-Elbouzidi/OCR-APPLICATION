@@ -5,211 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload File</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Your existing CSS styles here */
-        body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .container {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #8F9FE4, black);
-            position: relative;
-        }
-
-        .form-wrapper {
-            background: #ffffff;
-            width: 400px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin-right: 60px; /* Réduit l'espace entre le formulaire et les cartes */
-        }
-
-        .cards-wrapper {
-            display: flex;
-            flex-wrap: wrap; /* Permet aux cartes de se déplacer vers la ligne suivante */
-            gap: 20px; /* Espace entre les cartes */
-            justify-content: flex-start; /* Alignement des cartes à gauche */
-            width: calc(50% - 40px); /* Ajuste la largeur du conteneur en tenant compte des espacements */
-        }
-
-        .card {
-            background: #ffffff;
-            width: calc(33.333% - 20px);
-            box-sizing: border-box;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            transition: all 0.3s ease-in-out;
-            border: 2px solid transparent;
-            border-color: #BCA5D0;
-            cursor: pointer;
-        }
-        
-        .card.selected {
-            background-color: white; /* Correction de la couleur de fond pour les cartes sélectionnées */
-            color: white;
-            border-color: #3DB74E; 
-            transform: translateY(-10px); /* Applique l'effet de survol */
-            box-shadow: 0 8px 16px #BACBFE; /* Applique l'effet de survol */
-        }
-        
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px #8a9bab;
-            border-color: #BADFD7;
-        }
-        
-        .card.selected:hover {
-            /* Si vous souhaitez que le style survol appliqué aux cartes sélectionnées soit différent, vous pouvez le définir ici */
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px #8a9bab;
-            border-color: #3DB74E;
-        }
-        
-        .card h3 {
-            margin: 0;
-            font-size: 20px;
-            color: #8F9FE4;
-        }
-        
-        .card p {
-            color: #666666;
-            margin-top: 10px;
-        }
-
-        .form-wrapper h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #8F9FE4;
-        }
-
-        .form-wrapper input[type="text"] {
-            width: 90%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #dddddd;
-            border-radius: 5px;
-        }
-
-        .drag-file-area {
-            border: 2px dashed #007aff;
-            border-radius: 10px;
-            padding: 30px 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            height: 260px;
-        }
-
-        .drag-file-area:hover {
-            background-color: #f9f9f9;
-        }
-
-        .drag-file-area img {
-            width: 80px;
-            margin-bottom: 10px;
-        }
-
-        .drag-file-area p {
-            font-size: 16px;
-            color: #333333;
-        }
-
-        .drag-file-area label {
-            display: inline-block;
-            margin-top: 10px;
-            cursor: pointer;
-            color: #007aff;
-            font-weight: bold;
-        }
-
-        .drag-file-area input[type="file"] {
-            display: none;
-        }
-
-        .upload-button {
-            background: #3DB74E; /* Couleur verte */
-            color: #ffffff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            opacity: 0.6; /* Start as disabled */
-            pointer-events: none; /* Disable pointer events */
-        }
-
-        .upload-button.enabled {
-            opacity: 1; /* Enabled state */
-            pointer-events: auto; /* Enable pointer events */
-        }
-
-        .upload-button:hover.enabled {
-            background: #2b8a3e; /* Couleur plus foncée au survol */
-        }
-
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-
-        .logo img {
-            width: 100px;
-        }
-
-        .progress-bar {
-            width: 0;
-            height: 5px;
-            background-color: #007aff;
-            margin-top: 10px;
-            border-radius: 5px;
-            transition: width 0.5s ease-in-out;
-        }
-
-        .cannot-upload-message {
-            display: none;
-            color: red;
-        }
-
-        .file-block {
-            display: none;
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .file-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f1f1f1;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .file-name {
-            margin-right: 120px;
-        }
-
-        .remove-file-icon {
-            cursor: pointer;
-            color: #ff4d4d;
-            font-size: 20px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -220,23 +17,19 @@
             <h2>File Upload!</h2>
             <div class="drag-file-area">
                 <img class="upload-icon" src="https://img.icons8.com/plasticine/100/000000/upload.png" alt="Upload Icon">
-                <p class="dynamic-message">Drag and drop file here</p>
-                <label for="file-upload">or select a file from your computer</label>
-                <input type="file" id="file-upload" class="default-file-input" name="file" required>
+                <p class="dynamic-message">Drag and drop files here</p>
+                <label for="file-upload">or select files from your computer</label>
+                <input type="file" id="file-upload" class="default-file-input" name="files" multiple required>
             </div>
             <button class="upload-button">Upload</button>
             <div class="progress-bar"></div>
-            <div class="cannot-upload-message">Cannot upload file. Please select a file.</div>
+            <div class="cannot-upload-message">Cannot upload files. Please select files.</div>
             <div class="file-block">
-                <div class="file-details">
-                    <span class="file-name"></span>
-                    <span class="file-size"></span>
-                    <span class="remove-file-icon"><i class="fas fa-trash"></i></span>
-                </div>
+                <div id="file-details-container"></div>
             </div>
         </div>
         <div class="cards-wrapper">
-            <div class="card" data-card-id="date-de-facture - montant-total">
+            <div class="card" data-card-id="numero de la facture, \ntotal">
                 <h3>Facture</h3>
             </div>
             <div class="card" data-card-id="address-livraison - nom-client">
@@ -251,98 +44,6 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const fileUploadInput = document.getElementById('file-upload');
-            const uploadButton = document.querySelector('.upload-button');
-            const progressBar = document.querySelector('.progress-bar');
-            const dynamicMessage = document.querySelector('.dynamic-message');
-            const cannotUploadMessage = document.querySelector('.cannot-upload-message');
-            const fileBlock = document.querySelector('.file-block');
-            const fileNameElement = document.querySelector('.file-name');
-            const fileSizeElement = document.querySelector('.file-size');
-            const removeFileIcon = document.querySelector('.remove-file-icon');
-
-            let selectedFile = null;
-            let selectedCardData = '';
-
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                card.addEventListener('click', () => {
-                    cards.forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    selectedCardData = card.dataset.cardId; // Ensure this is correctly assigned
-                    console.log("Selected Card Data:", selectedCardData); // For debugging
-                    updateUploadButtonState();
-                });
-            });
-
-            function updateUploadButtonState() {
-                if (selectedFile && selectedCardData) {
-                    uploadButton.classList.add('enabled');
-                    uploadButton.disabled = false;
-                } else {
-                    uploadButton.classList.remove('enabled');
-                    uploadButton.disabled = true;
-                }
-            }
-
-            fileUploadInput.addEventListener('change', (event) => {
-                if (event.target.files.length > 0) {
-                    selectedFile = event.target.files[0];
-                    fileNameElement.textContent = selectedFile.name;
-                    fileSizeElement.textContent = `${(selectedFile.size / 1024).toFixed(2)} KB`;
-                    fileBlock.style.display = 'block';
-                    updateUploadButtonState();
-                }
-            });
-
-            removeFileIcon.addEventListener('click', () => {
-                selectedFile = null;
-                fileUploadInput.value = '';
-                fileBlock.style.display = 'none';
-                updateUploadButtonState();
-            });
-
-            uploadButton.addEventListener('click', () => {
-                if (selectedFile && selectedCardData) {
-                    uploadFile(selectedFile, selectedCardData);
-                } else {
-                    cannotUploadMessage.style.display = 'block';
-                }
-            });
-
-            function uploadFile(file, cardData) {
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('cardData', cardData);  // Ensure cardData is correctly appended
-
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', '/upload', true);
-
-                xhr.upload.addEventListener('progress', (event) => {
-                    if (event.lengthComputable) {
-                        const percentComplete = (event.loaded / event.total) * 100;
-                        progressBar.style.width = percentComplete + '%';
-                    }
-                });
-
-                xhr.addEventListener('load', () => {
-                    if (xhr.status === 200) {
-                        progressBar.style.width = '100%';
-                        dynamicMessage.textContent = 'File uploaded successfully!';
-                    } else {
-                        dynamicMessage.textContent = 'Upload failed.';
-                    }
-                });
-
-                xhr.addEventListener('error', () => {
-                    dynamicMessage.textContent = 'Upload failed.';
-                });
-
-                xhr.send(formData);
-            }
-        });
-    </script>
+    <script src="../static/index.js"></script>
 </body>
 </html>
