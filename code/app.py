@@ -128,7 +128,14 @@ def upload_file():
         return jsonify({'error': 'No files or card data provided'}), 400
 
     files = request.files.getlist('files')  # Get the list of files
-    card_data = request.form['cardData']
+    card_data_raw = request.form['cardData']
+    print(f"Raw card data: {card_data_raw}")  # Print the raw card data for debugging
+    
+    try:
+        card_data = json.loads(card_data_raw)
+    except json.JSONDecodeError as e:
+        print(f"JSONDecodeError: {e}")
+        return jsonify({'error': 'Invalid card data format'}), 400
 
     if not files:
         return jsonify({'error': 'No files provided'}), 400
@@ -158,6 +165,7 @@ def upload_file():
 
     # Return a success message
     return jsonify({'message': 'Files processed and uploaded successfully!'}), 200
+
 
 @app.route('/preview')
 def preview():

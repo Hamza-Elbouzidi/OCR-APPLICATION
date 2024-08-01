@@ -52,11 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle card selection
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
             cards.forEach(c => c.classList.remove('selected'));
             card.classList.add('selected');
-            selectedCardData = card.dataset.cardIds; // Update to use 'card-ids'
+            selectedCardData = JSON.stringify(card.dataset.cardIds); // Ensure it is a JSON string
             console.log("Selected Card Data:", selectedCardData); // For debugging
             updateUploadButtonState();
         });
@@ -73,20 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
             uploadButton.classList.remove('enabled');
             uploadButton.disabled = true;
         }
-    }
-
-    // Handle file removal
-    function handleRemoveFileIcon() {
-        const removeFileIcons = document.querySelectorAll('.remove-file-icon');
-        removeFileIcons.forEach(icon => {
-            icon.addEventListener('click', () => {
-                const fileDetail = icon.parentElement;
-                const fileName = fileDetail.querySelector('.file-name').textContent;
-                selectedFiles = selectedFiles.filter(file => file.name !== fileName);
-                fileDetail.remove();
-                updateUploadButtonState();
-            });
-        });
     }
 
     // Handle file upload
