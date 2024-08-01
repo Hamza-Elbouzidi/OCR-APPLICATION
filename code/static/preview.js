@@ -50,18 +50,30 @@ function renderJsonItem(item) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const jsonDataContainer = document.getElementById('json-data-container');
-    const jsonData = JSON.parse(document.getElementById('json-data').textContent);
+    const jsonDataElement = document.getElementById('json-data');
 
-    for (const [key, value] of Object.entries(jsonData)) {
-        const section = document.createElement('div');
-        section.classList.add('section');
-        const h2 = document.createElement('h2');
-        h2.textContent = key.charAt(0).toUpperCase() + key.slice(1);
-        section.appendChild(h2);
-        const jsonContent = document.createElement('div');
-        jsonContent.classList.add('json-content');
-        jsonContent.appendChild(renderJsonItem(value));
-        section.appendChild(jsonContent);
-        jsonDataContainer.appendChild(section);
+    // Ensure JSON data element exists and has content
+    if (jsonDataElement && jsonDataElement.textContent) {
+        try {
+            const jsonData = JSON.parse(jsonDataElement.textContent);
+            console.log('Parsed JSON Data:', jsonData); // Debugging statement
+
+            for (const [key, value] of Object.entries(jsonData)) {
+                const section = document.createElement('div');
+                section.classList.add('section');
+                const h2 = document.createElement('h2');
+                h2.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+                section.appendChild(h2);
+                const jsonContent = document.createElement('div');
+                jsonContent.classList.add('json-content');
+                jsonContent.appendChild(renderJsonItem(value));
+                section.appendChild(jsonContent);
+                jsonDataContainer.appendChild(section);
+            }
+        } catch (error) {
+            console.error('Error parsing JSON data:', error);
+        }
+    } else {
+        console.error('No JSON data found in the DOM element.');
     }
 });
