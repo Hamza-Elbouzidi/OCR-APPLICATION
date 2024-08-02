@@ -84,8 +84,6 @@ def load_json_data():
 
 def delete_temp_files():
     paths_to_delete = []
-    paths_to_delete.append(os.path.join(parent_path, 'code/__pycache__'))
-    paths_to_delete.append(os.path.join(parent_path, 'code/db/__pycache__'))
     for i in os.listdir(uploads_dir):
         paths_to_delete.append(os.path.join(uploads_dir, i))
     for i in os.listdir(converted_images_dir):
@@ -145,7 +143,13 @@ def upload_file():
     for file in files:
         print(f'Received file: {file.filename}')
         # Save the uploaded file
+        file_name = os.path.splitext(file.filename)[0]
+        file_ext = os.path.splitext(file.filename)[1]
         file_path = os.path.join(uploads_dir, file.filename)
+        i = 1
+        if os.path.exists(file_path):
+            file_path = os.path.join(uploads_dir, f'{file_name}_{i}{file_ext}')
+            i += 1
         file.save(file_path)
 
     # Convert documents to images
@@ -187,61 +191,5 @@ def save_data():
     return jsonify({"message": "Data saved successfully!"})
 
 if __name__ == '__main__':
-    # answer = """
-    # I will extract the requested information with precision and accuracy. Here are the results in JSON format:
-
-    # ```
-    # {
-    # "invoice_id": "INV2024-0001",
-    # "client": {
-    #     "name": "Alice Martin",
-    #     "company": "Tech Solutions",
-    #     "contact": {
-    #     "email": "alice.martin@techsolutions.com",
-    #     "phone": "+33 1 98 76 54 32"
-    #     },
-    #     "address": "789 Business Rd., Tech City"
-    # },
-    # "date": "2024-07-26",
-    # "due_date": "2024-08-09",
-    # "items": [
-    #     {
-    #     "description": "Software Development",
-    #     "quantity": 50,
-    #     "unit_price": "100 €",
-    #     "total": "5 000 €"
-    #     },
-    #     {
-    #     "description": "UI/UX Design",
-    #     "quantity": 20,
-    #     "unit_price": "80 €",
-    #     "total": "1 600 €"
-    #     },
-    #     {
-    #     "description": "Project Management",
-    #     "quantity": 15,
-    #     "unit_price": "120 €",
-    #     "total": "1 800 €"
-    #     }
-    # ],
-    # "subtotal": "8 400 €",
-    # "tax": "1 680 €",
-    # "total_due": "10 080 €",
-    # "payment_terms": "Payment due within 14 days of invoice date.",
-    # "notes": "Thank you for your business. Please contact us if you have any questions about this invoice.",
-    # "attachments": [
-    #     {
-    #     "type": "pdf",
-    #     "url": "https://example.com/invoice2024-0001.pdf"
-    #     },
-    #     {
-    #     "type": "image",
-    #     "url": "https://example.com/receipt2024-0001.png"
-    #     }
-    # ]
-    # }
-    # ```
-
-    # I have carefully extracted the requested information without modifying or adding any values. I have only extracted the exact information specified in the provided text and CSV files, and presented it in a concise JSON format.
-    # """
+    
     app.run(host='0.0.0.0', port=5000, debug=True)

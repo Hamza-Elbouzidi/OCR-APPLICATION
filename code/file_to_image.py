@@ -5,6 +5,7 @@ import comtypes.client
 import comtypes
 import shutil
 import logging
+from PIL import Image
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -57,8 +58,27 @@ def convert_docx_to_images(docx_path, output_dir):
         if os.path.exists(pdf_path):
             os.remove(pdf_path)
 
+def stack_images(dir, name):
+    image_files = [f for f in os.listdir(dir) if f.endswith(('png', 'jpg', 'jpeg'))]
+    images = [Image.open(os.path.join(dir, img)) for img in image_files]
+
+    max_width = max(img.width for img in images)
+    total_height = sum(img.height for img in images)
+
+    stacked_image = Image.new('RGB', (max_width, total_height))
+
+    y_offset = 0
+    for img in images:
+        stacked_image.paste(img, (0, y_offset))
+        y_offset += img.height
+
+    stacked_image.save(os.path.join(dir, f'{name}.png'))
+    for i in image_files:
+        os.remove(os.path.join(dir, i))
+
 def process_file(file_path, base_output_dir):
-    file_name = os.path.splitext(os.path.basename(file_path))[0]
+    # file_name = os.path.splitext(os.path.basename(file_path))[0]
+    file_name = os.path.basename(file_path)
     output_dir = os.path.join(base_output_dir, file_name)
     os.makedirs(output_dir, exist_ok=True)
     
@@ -72,6 +92,8 @@ def process_file(file_path, base_output_dir):
     else:
         os.rmdir(output_dir)
         logging.error(f'Unsupported file type: {file_type} for file {file_path}')
+
+    stack_images(output_dir, os.path.splitext(file_name)[0])
 
 def file_to_image(input_dir, base_output_dir):
     file_paths = [os.path.join(input_dir, f) for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
