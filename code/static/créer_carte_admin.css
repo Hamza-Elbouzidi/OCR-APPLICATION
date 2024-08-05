@@ -94,7 +94,6 @@ header.navbar {
     margin-top: 10px; 
 }
 
-
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
 * {
@@ -112,7 +111,7 @@ body {
     min-height: 100vh;
     padding: 10px;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #1e2b67, black);
+    background: linear-gradient(135deg, #b3badc, rgb(11, 62, 94));
 }
 
 .container {
@@ -351,4 +350,31 @@ width: 10px;
 height: 40px; 
 border: 1px solid #ccc;
 border-radius: 5px;
+}
+
+
+
+.remove-field {
+background-color: #e74c3c; /* Couleur de fond rouge */
+color: white; /* Couleur du texte en blanc */
+border: none; /* Sans bordure */
+padding: 5px 6px; /* Espacement interne */
+cursor: pointer; /* Curseur en forme de main */
+border-radius: 15px; /* Coins légèrement arrondis */
+font-size: 14px; /* Taille de police */
+margin-top: 30px; /* Espacement au-dessus */
+width: 90px;
+height: 40px;
+
+box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Ombre portée */
+}
+
+.remove-field:hover {
+background-color: #c0392b; /* Couleur de fond au survol */
+box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4); /* Ombre portée au survol */
+}
+
+.remove-field:active {
+background-color: #a93226; /* Couleur de fond lors du clic */
+box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Ombre portée lors du clic */
 }

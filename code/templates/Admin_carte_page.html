@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Tooplate">
+    <title>Adminstrateur Templates</title>
+
+    <!-- CSS FILES -->      
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/bootstrap-icons.css" rel="stylesheet"> 
+    <link href="../static/tooplate-mini-finance.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+     
+    <link rel="stylesheet" href="../static/carte_page.css">
+  
+</head>
+<body>
+    <header class="navbar flex-md-nowrap">
+        <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
+            <a class="navbar-brand" href="index.html">
+                <div class="logo">
+                    <img src="https://seeklogo.com/images/C/cbi-logo-AE7D35EAC7-seeklogo.com.png" alt="Logo de l'entreprise">
+                </div>
+            </a>
+        </div>
+
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="#" method="get" role="form">
+            <input class="form-control" name="search" type="text" placeholder="Search" aria-label="Search">
+        </form>
+
+        <div class="navbar-nav me-lg-2">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+
+                <div class="dropdown ps-3">
+                    <div class="container">
+		<div class="btn" id="btn1"><a href="Admin_créer_carte.html">créer carte</a></div>
+		<div class="btn" id="btn2"><a href="#" >Test</a></div>
+                        
+                </div>
+
+                
+            </div>
+        </div>
+    </header>
+
+    </head>
+
+
+    <body>
+
+
+        <!-- Boîte de confirmation pour la suppression -->
+           <div id="confirm-delete-dialog" class="confirm-dialog" style="display: none;">
+               <p>Êtes-vous sûr de vouloir supprimer cette carte ?</p>
+               <button id="delete-yes">Oui</button>
+               <button id="delete-no">Non</button>
+          </div>
+
+       <!-- Boîte de confirmation pour annuler -->
+           <div id="confirm-cancel-dialog" class="confirm-dialog" style="display: none;">
+             <p>Êtes-vous sûr de vouloir annuler cette opération ?</p>
+                <button id="cancel-yes">Oui</button>
+                <button id="cancel-no">Non</button>
+         </div>
+        <!-- Header code here... -->
+    
+        <h1> Cartes</h1>
+        <div id="cards-container"></div>
+    
+        <!-- Formulaire de modification -->
+        <div id="edit-form"  class="modal">
+            <div class="modal-content">
+            <h3> Modifier la carte</h3>
+            <form id="edit-card-form">
+                <input type="hidden" name="card-id" id="edit-card-id">
+                <label for="edit-card-name">Nom de la Carte</label>
+                <input type="text" name="card-name" id="edit-card-name" required>
+
+                <div id="edit-fields-container"></div>
+                <button type="button" id="add-field-button">Ajouter Champ</button>
+                <button type="submit" id="enregistrer_btn">Enregistrer</button>
+                <button class="btn-close-popup" 
+                onclick="togglePopup()">Fermer</button>
+               
+                
+        
+            </form>
+            </div>
+        </div>
+
+        <script src="../static/carte_page.js"></script>
+       
+    </body>
+    </html>
+    
