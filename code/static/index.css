@@ -14,16 +14,20 @@ body {
     align-items: center;
     background: linear-gradient(135deg, #8F9FE4, black);
     position: relative;
+    overflow: hidden; /* Prevent scroll on the main container */
 }
 
 .form-wrapper {
     background: #ffffff;
     width: 400px;
+    max-height: 80vh; /* Limit the height of the form-wrapper */
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-right: 60px; /* Réduit l'espace entre le formulaire et les cartes */
+    margin-right: 60px;
+    overflow: hidden; /* Hide overflow to keep the design intact */
+    position: relative;
 }
 
 .cards-wrapper {
@@ -63,7 +67,6 @@ body {
 }
 
 .card.selected:hover {
-    /* Si vous souhaitez que le style survol appliqué aux cartes sélectionnées soit différent, vous pouvez le définir ici */
     transform: translateY(-10px);
     box-shadow: 0 8px 16px #8a9bab;
     border-color: #3DB74E;
@@ -99,9 +102,10 @@ body {
     border-radius: 10px;
     padding: 30px 20px;
     text-align: center;
-    margin-bottom: 20px;
     transition: all 0.3s;
     height: 260px;
+    overflow: hidden; /* Hide overflow initially */
+    position: relative;
 }
 
 .drag-file-area:hover {
@@ -127,11 +131,17 @@ body {
 }
 
 .drag-file-area input[type="file"] {
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Hide the actual file input */
+    cursor: pointer;
 }
 
 .upload-button {
-    background: #3DB74E; /* Couleur verte */
+    background: #3DB74E; /* Green color */
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -149,7 +159,7 @@ body {
 }
 
 .upload-button:hover.enabled {
-    background: #2b8a3e; /* Couleur plus foncée au survol */
+    background: #2b8a3e; /* Darker color on hover */
 }
 
 .logo {
@@ -178,15 +188,20 @@ body {
 
 .file-block {
     display: none;
-    margin-top: 20px;
-    text-align: left;
+    max-height: 200px; /* Ensure a maximum height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    background: #f4f4f4; /* Match the theme */
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .file-detail {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #f1f1f1;
+    background: #ffffff;
     padding: 10px;
     border-radius: 5px;
     margin-bottom: 10px;
@@ -208,4 +223,22 @@ body {
     cursor: pointer;
     color: #ff4d4d;
     font-size: 20px;
+}
+
+/* Custom scrollbar for file list */
+.file-block::-webkit-scrollbar {
+    width: 8px;
+}
+
+.file-block::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.file-block::-webkit-scrollbar-thumb {
+    background: #1c8aff;
+    border-radius: 10px;
+}
+
+.file-block::-webkit-scrollbar-thumb:hover {
+    background: #0f78e1;
 }
