@@ -1,99 +1,97 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     const createCategoryForm = document.getElementById('create-category-form');
     const saveCardButton = document.getElementById('save-card-button');
     const addFieldButton = document.getElementById('add-field-button');
     const fieldsContainer = document.getElementById('fields-container');
-    const fieldTypeSelect = document.getElementById('field-type');
 
     // Ajouter un champ au formulaire
     addFieldButton.addEventListener('click', () => {
-        const fieldType = fieldTypeSelect.value;
-        const fieldName = document.querySelector('.field-name').value.trim();
-        
-        if (!fieldType) {
-            alert('Veuillez choisir un type de champ.');
-            return;
-        }
-
         const fieldGroup = document.createElement('div');
         fieldGroup.classList.add('form-row', 'field-group');
-        let fieldHTML;
-
-        switch (fieldType) {
-            case 'text':
-            case 'number':
-            case 'date':
-            case 'email':
-                fieldHTML = `
-                    <div class="input-data">
-                        <input type="${fieldType}" class="field-name" required>
-                        <label>Nom du Champ</label>
-                        <div class="underline"></div>
-                    </div>
-                `;
-                break;
-            case 'dropdown':
-                fieldHTML = `
-                    <div class="input-data">
-                        <select class="field-dropdown" required>
-                            <option value="" disabled selected>Choisissez une option</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            
-                        </select>
-                        <label>Nom du Champ</label>
-                        <div class="underline"></div>
-                    </div>
-                `;
-                break;
-        }
-        fieldGroup.innerHTML = fieldHTML;
+        fieldGroup.innerHTML = `
+            <div class="form-row">
+                <div class="input-data">
+                    <input type="text" class="field-name" required>
+                    <label>Nom de Champ</label>
+                    <div class="underline"></div>
+                </div>
+                <div class="input-data">
+                    <select class="field-type" required>
+                        <option value="" disabled selected>Choisissez le type de champ</option>
+                        <option value="text">Texte</option>
+                        <option value="number">Nombre</option>
+                        <option value="email">Email</option>
+                        <option value="address">Adresse</option>
+                        <option value="date">Date</option>
+                        <option value="table">Tableau</option>
+                    </select>
+                    <div class="underline"></div>
+                </div>
+            </div>
+            <button type="button" class="remove-field" onclick="removeField(this)">Supprimer</button>
+        `;
         fieldsContainer.appendChild(fieldGroup);
+    
     });
 
-    // Enregistrer la carte
-    saveCardButton.addEventListener('click', (e) => {
-        e.preventDefault(); // Empêcher la soumission par défaut
-        
-        const cardName = document.getElementById('category-name').value.trim();
-        const fieldGroups = document.querySelectorAll('.field-group');
-        const fields = Array.from(fieldGroups).map(group => ({
-            name: group.querySelector('.field-name') ? group.querySelector('.field-name').value.trim() : null,
-            type: group.querySelector('select') ? 'dropdown' : group.querySelector('input').type
-        }));
 
-        if (cardName && fields.every(field => field.name || field.type === 'dropdown')) {
-            const card = {
-                name: cardName,
-                fields: fields
-            };
-
-            saveCard(card);
-
-            // Réinitialiser le formulaire
-            createCategoryForm.reset();
-            fieldsContainer.innerHTML = '';
-        } else {
-            alert('Veuillez remplir tous les champs');
-        }
-    });
-
-    function saveCard(card) {
-        let cards = JSON.parse(localStorage.getItem('cards')) || [];
-        cards.push(card);
-        localStorage.setItem('cards', JSON.stringify(cards));
+// Fonction pour supprimer un champ avec confirmation
+window.removeField = function(button) {
+const fieldGroup = button.parentElement;
+if (confirm('Êtes-vous sûr de vouloir supprimer ce champ ?')) {
+    if (fieldGroup) {
+        fieldGroup.remove();
     }
+}
+};
 
-    // Load existing cards on page load
-    function loadCards() {
-        const cards = JSON.parse(localStorage.getItem('cards')) || [];
-        cards.forEach(card => {
-            
-        });
-    }
+// Enregistrer la carte
+saveCardButton.addEventListener('click', (e) => {
+e.preventDefault(); // Empêcher la soumission par défaut
 
-    loadCards();
+const cardName = document.getElementById('category-name').value.trim();
+
+// Inclure les champs initiaux et dynamiquement ajoutés
+const fieldGroups = document.querySelectorAll('.field-group');
+const fields = Array.from(fieldGroups).map(group => ({
+name: group.querySelector('.field-name').value.trim(),
+type: group.querySelector('.field-type').value
+}));
+
+if (cardName && fields.every(field => field.name && field.type)) {
+const card = {
+    name: cardName,
+    fields: fields
+};
+
+saveCard(card);
+
+// Réinitialiser le formulaire
+createCategoryForm.reset();
+fieldsContainer.innerHTML = '';
+} else {
+alert('Veuillez remplir tous les champs');
+}
 });
+
+function saveCard(card) {
+let cards = JSON.parse(localStorage.getItem('cards')) || [];
+cards.push(card);
+localStorage.setItem('cards', JSON.stringify(cards));
+}
+
+// Load existing cards on page load
+function loadCards() {
+const cards = JSON.parse(localStorage.getItem('cards')) || [];
+cards.forEach(card => {
+    // Ici, ajoutez le code pour afficher les cartes existantes si nécessaire
+});
+}
+
+loadCards();
+});
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const viewAllCardsButton = document.getElementById('view-all-cards-button');

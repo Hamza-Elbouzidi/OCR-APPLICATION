@@ -1,0 +1,444 @@
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    bottom: 20px;
+}
+
+.logo img {
+    width: 100px;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding-top: 80px; /* Ajoutez un padding-top pour éviter que le contenu soit masqué par le header */
+  
+    background: linear-gradient(135deg, #b3badc, rgb(11, 62, 94));
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-container {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    width: 300px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.image-container {
+    background-color: transparent; /* Assurez-vous que le conteneur de l'image est transparent */
+}
+
+/* Changer la taille du document (largeur et hauteur) */
+.form-container {
+    width: 55%; /* Ajustez la largeur selon vos besoins */
+    margin: 10 auto; /* Centre le conteneur */
+    padding: 20px;
+    background-color: #f9f9f9; /* Couleur de fond du conteneur */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2ba0c6;
+}
+
+#add-field-button {
+    border-radius: 10px;
+    background-color: rgb(16, 19, 197);
+    
+    width: 280px;
+   margin-right: 90px;
+  
+}
+
+#add-field-button:hover {
+    background-color: rgba(6, 155, 254, 0.936);
+}
+
+#save-card-button {
+    border-radius: 20px;
+    background-color: rgb(241, 112, 7);
+    margin-left: 250px;
+    width: 150px;
+}
+
+#save-card-button:hover {
+    background-color: #e88a18ef;
+}
+
+#submit{
+    border-radius: 20px;
+    width: 280px;
+    margin-left: 250px;
+    background-color: rgb(159, 202, 85);
+}
+
+#button_creer {
+    border-radius: 30px;
+    width: 250px;
+    background-color: rgb(240, 78, 19);
+}
+
+.form-and-category-container {
+    position: relative; /* Position relative pour que les enfants positionnés absolument soient basés sur ce conteneur */
+    height: 300px;
+    width: 600px;
+    margin-left: 60px;
+}
+
+.custom-block.custom-block-exchange {
+    position: absolute; /* Position absolue pour placer l'élément en haut à droite */
+    top: 0; /* Aligner en haut du conteneur parent */
+    right: 0; /* Aligner à droite du conteneur parent */
+    width: 420px;
+}
+
+.btn-delete {
+    border-radius: 20px;
+    background-color: rgba(254, 142, 6, 0.936);
+    width: 170px;
+}
+
+.btn-edit {
+    border-radius: 20px;
+    background-color: rgb(248, 74, 5);
+    width: 170px;
+}
+
+.btn-delete:hover {
+    background-color: #f95f00;
+}
+
+header.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030; /* Ensure it is above other content */
+    background-color: white; /* Ensure the background is white */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+}
+
+/* Optionally adjust header height */
+header.navbar {
+    height: 60px; /* Adjust this value as needed */
+}
+
+.navbar .navbar-brand {
+    padding-left: 120px; /* Adjust this value if needed */
+}
+
+.header-form {
+    margin-top: 10px; /* Adjust this value if needed */
+}
+
+
+h1 {
+    text-align: center;
+    text-shadow:#f1f5f8 0 -1px 0,
+    #236d9b 1px 1px 0,
+    #407ea5 2px 2px 0,
+    #d7edfa 3px 3px 0,
+    #2476a8 4px 4px 0,
+    #004874 5px 5px 0,
+    #bab9b9 5px 5px 10px;color:#0a2544;
+ 
+    
+   
+
+    
+}
+
+#cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    width: 300px;
+    box-shadow: 2px 2px 5px rgba(247, 244, 244, 0.1);
+    
+}
+
+.button-container {
+    margin-top: 10px;
+}
+
+.button-container button {
+    display: inline-block;
+    width: 50px;
+    margin-right: 10px; /* Espace entre les boutons */
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.button-container .edit-button i {
+    color: #21444e; /* Couleur de l'icône pour Modifier */
+}
+
+.button-container .cancel-button i {
+    color: #e4f0f3; /* Couleur de l'icône pour Modifier */
+}
+
+.delete-button {
+    background-color: lightcoral;
+    
+}
+
+
+#edit-form{
+    border: 1px solid hsl(0, 0%, 80%);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 10px;
+    width: 400px;
+    box-shadow: 20px 20px 50px rgba(0, 0, 0, 0.1);
+ 
+
+    .btn-close-popup {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        margin-top: 5px;
+        background-color: #e74c3c;
+        color: #fff;
+        border-radius: 10px;
+        width: 280px;
+        height: 46px;
+           
+    }
+
+    .btn-close-popup:hover {
+        background-color: #4caf50;
+       }
+}
+
+
+/* Style pour la fenêtre modale */
+.modal {
+display: none; /* Caché par défaut */
+position: fixed; /* Reste en place lors du défilement */
+left: 500px;
+top: 10px;
+width: 100px; /* Largeur de l'écran */
+height: 100vh; /* Hauteur de l'écran */
+background-color: rgba(0,0,0,0.4); /* Fond semi-transparent */
+}
+
+/* Contenu de la modale */
+.modal-content {
+background-color: #fefefe;
+margin: 0; /* Enlever les marges */
+margin-top: 50px;
+padding: 30px;
+
+width: 10; /* Largeur à 100% de la modale */
+height: 10; /* Hauteur à 100% de la modale */
+box-sizing: border-box; /* Inclure le padding et la bordure dans les dimensions */
+
+}
+
+
+
+
+
+.card.noisy {
+background-color: #e8e8e8; /* Changez cette couleur selon vos besoins */
+border: 1px solid #bfbfbf; /* Optionnel, pour un effet de bordure */
+}
+
+
+
+
+
+
+
+.container {
+width: 1000px;
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+}
+.container .btn {
+position: relative;
+top: 25px;
+left: 0;
+width: 180px;
+height: 48px;
+margin: 100px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.container .btn a {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+background: rgba(241, 236, 236, 0.05);
+box-shadow: 0 15px 15px rgba(0, 0, 0, 0);
+border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+border-top: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 30px;
+padding: 10px;
+letter-spacing: 1px;
+text-decoration: none;
+overflow: hidden;
+color: #121c66;
+font-weight: 400px;
+z-index: 1;
+transition: 0.5s;
+backdrop-filter: blur(15px);
+}
+.container .btn:hover a {
+letter-spacing: 3px;
+}
+.container .btn a::before {
+content: "";
+position: absolute;
+top: 0;
+left: 0;
+width: 50%;
+height: 100%;
+background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+transform: skewX(45deg) translate(0);
+transition: 0.5s;
+filter: blur(0px);
+}
+.container .btn:hover a::before {
+transform: skewX(45deg) translate(200px);
+}
+.container .btn::before {
+content: "";
+position: absolute;
+left: 50%;
+transform: translatex(-50%);
+bottom: -5px;
+width: 30px;
+height: 10px;
+background: #C4DDFF;
+border-radius: 10px;
+transition: 0.5s;
+transition-delay: 0.5;
+}
+.container .btn:hover::before /*lightup button*/ {
+bottom: 0;
+height: 50%;
+width: 80%;
+border-radius: 30px;
+}
+
+.container .btn::after {
+content: "";
+position: absolute;
+left: 50%;
+transform: translatex(-50%);
+top: -5px;
+width: 30px;
+height: 10px;
+background: #C4DDFF;
+border-radius: 10px;
+transition: 0.5s;
+transition-delay: 0.5;
+}
+.container .btn:hover::after /*lightup button*/ {
+top: 0;
+height: 50%;
+width: 80%;
+border-radius: 30px;
+}
+.container .btn:nth-child(1)::before, /*chnage 1*/
+.container .btn:nth-child(1)::after {
+background: #C4DDFF;
+box-shadow: 0 0 5px #C4DDFF, 0 0 15px #C4DDFF, 0 0 30px #C4DDFF,
+0 0 60px #C4DDFF;
+}
+.container .btn:nth-child(2)::before, /* 2*/
+.container .btn:nth-child(2)::after {
+background: #B9CEEB;
+box-shadow: 0 0 5px #B9CEEB, 0 0 15px #B9CEEB, 0 0 30px #B9CEEB,
+0 0 60px #B9CEEB;
+}
+
+#btn1{
+left: 180px;
+margin-top: 56px;
+
+
+}
+
+#btn2{
+right: 150px;
+margin-top: 56px;
+
+
+}
