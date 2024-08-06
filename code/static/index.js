@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const fileUploadInput = document.getElementById('file-upload');
-    const uploadButton = document.querySelector('.upload-button');
-    const progressBar = document.querySelector('.progress-bar');
-    const dynamicMessage = document.querySelector('.dynamic-message');
-    const cannotUploadMessage = document.querySelector('.cannot-upload-message');
-    const fileBlock = document.querySelector('.file-block');
+    const dragFileArea = document.querySelector('.drag-file-area'); // Changed from ID to class selector
     const fileDetailsContainer = document.getElementById('file-details-container');
-    const cards = document.querySelectorAll('.card');
+    const fileBlock = document.querySelector('.file-block');
+    const uploadButton = document.querySelector('.upload-button');
+    const cards = document.querySelectorAll('.card'); // Ensure card elements are selected
     
     let selectedFiles = [];
     let selectedCardData = '';
@@ -17,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedFiles = Array.from(event.target.files);
 
         if (selectedFiles.length > 0) {
+            dragFileArea.style.height = '150px'; // Shrink height to make space for file list
+            fileBlock.style.display = 'block'; // Ensure file block is displayed
             selectedFiles.forEach(file => {
                 const fileDetail = document.createElement('div');
                 fileDetail.classList.add('file-detail');
@@ -36,6 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     selectedFiles = selectedFiles.filter(f => f !== file);
                     fileDetail.remove();
                     updateUploadButtonState();
+                    if (selectedFiles.length === 0) {
+                        dragFileArea.style.height = '260px'; // Reset height
+                        fileBlock.style.display = 'none'; // Hide file block
+                    }
                 });
 
                 fileDetail.appendChild(fileNameElement);
@@ -44,19 +48,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 fileDetailsContainer.appendChild(fileDetail);
             });
-            fileBlock.style.display = 'block';
+            updateUploadButtonState();
         } else {
-            fileBlock.style.display = 'none';
+            dragFileArea.style.height = '260px'; // Reset height
+            fileBlock.style.display = 'none'; // Hide file block
         }
-        updateUploadButtonState();
     });
 
     // Handle card selection
-        cards.forEach(card => {
-            card.addEventListener('click', () => {
-            cards.forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            selectedCardData = JSON.stringify(card.dataset.cardIds); // Ensure it is a JSON string
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            if (card.classList.contains('selected')) {
+                card.classList.remove('selected');
+                selectedCardData = ''; // Clear selected card data
+            } else {
+                cards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedCardData = JSON.stringify(card.dataset.cardIds); // Ensure it is a JSON string
+            }
             console.log("Selected Card Data:", selectedCardData); // For debugging
             updateUploadButtonState();
         });
@@ -81,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedFiles.length > 0 && selectedCardData) {
             uploadFiles(selectedFiles, selectedCardData);
         } else {
+            const cannotUploadMessage = document.querySelector('.cannot-upload-message');
             cannotUploadMessage.style.display = 'block';
             setTimeout(() => {
                 cannotUploadMessage.style.display = 'none';
