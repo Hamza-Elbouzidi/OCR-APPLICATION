@@ -176,6 +176,21 @@ def preview():
     json_data = load_json_data()  # Load data for preview route
     return render_template('preview.html', json_data=json_data)
 
+@app.route('/Admin_login')
+def Admin_login():
+    return render_template('Admin_login.html')
+
+@app.route('/Admin_créer_carte')
+def Admin_créer_carte():
+    return render_template('Admin_créer_carte.html')
+
+@app.route('/Admin_carte_page')
+def admin_carte_page():
+    cards = Card.query.all()
+    for card in cards:
+        card.data_ids = json.loads(card.data_ids)
+    return render_template('Admin_carte_page.html', cards=cards)
+
 @app.route('/preview/edit')
 def edit():
     json_data = load_json_data()  # Load data for edit route

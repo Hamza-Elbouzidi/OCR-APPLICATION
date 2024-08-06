@@ -44,63 +44,53 @@
 
                 <div class="dropdown ps-3">
                     <div class="container">
-		<div class="btn" id="btn1"><a href="Admin_créer_carte.html">créer carte</a></div>
-		<div class="btn" id="btn2"><a href="#" >Test</a></div>
-                        
+                        <div class="btn" id="btn1"><a href="Admin_créer_carte.html">Créer carte</a></div>
+                        <div class="btn" id="btn2"><a href="#" >Test</a></div>
+                    </div>       
                 </div>
-
-                
             </div>
         </div>
     </header>
 
-    </head>
+    <!-- Boîte de confirmation pour la suppression -->
+    <div id="confirm-delete-dialog" class="confirm-dialog" style="display: none;">
+        <p>Êtes-vous sûr de vouloir supprimer cette carte ?</p>
+        <button id="delete-yes">Oui</button>
+        <button id="delete-no">Non</button>
+    </div>
 
+    <!-- Boîte de confirmation pour annuler -->
+    <div id="confirm-cancel-dialog" class="confirm-dialog" style="display: none;">
+        <p>Êtes-vous sûr de vouloir annuler cette opération ?</p>
+        <button id="cancel-yes">Oui</button>
+        <button id="cancel-no">Non</button>
+    </div>
 
-    <body>
+    <h1> Cartes</h1>
+    <div id="cards-container">
+        {% for card in cards %}
+        <div class="card" data-card-ids='{{ card.data_ids | tojson }}' onclick="selectCard(this)">
+            <h3>{{ card.title }}</h3>
+        </div>
+        {% endfor %}
+    </div>
 
-
-        <!-- Boîte de confirmation pour la suppression -->
-           <div id="confirm-delete-dialog" class="confirm-dialog" style="display: none;">
-               <p>Êtes-vous sûr de vouloir supprimer cette carte ?</p>
-               <button id="delete-yes">Oui</button>
-               <button id="delete-no">Non</button>
-          </div>
-
-       <!-- Boîte de confirmation pour annuler -->
-           <div id="confirm-cancel-dialog" class="confirm-dialog" style="display: none;">
-             <p>Êtes-vous sûr de vouloir annuler cette opération ?</p>
-                <button id="cancel-yes">Oui</button>
-                <button id="cancel-no">Non</button>
-         </div>
-        <!-- Header code here... -->
-    
-        <h1> Cartes</h1>
-        <div id="cards-container"></div>
-    
-        <!-- Formulaire de modification -->
-        <div id="edit-form"  class="modal">
-            <div class="modal-content">
+    <!-- Formulaire de modification -->
+    <div id="edit-form" class="modal">
+        <div class="modal-content">
             <h3> Modifier la carte</h3>
             <form id="edit-card-form">
                 <input type="hidden" name="card-id" id="edit-card-id">
                 <label for="edit-card-name">Nom de la Carte</label>
                 <input type="text" name="card-name" id="edit-card-name" required>
-
                 <div id="edit-fields-container"></div>
                 <button type="button" id="add-field-button">Ajouter Champ</button>
                 <button type="submit" id="enregistrer_btn">Enregistrer</button>
-                <button class="btn-close-popup" 
-                onclick="togglePopup()">Fermer</button>
-               
-                
-        
+                <button class="btn-close-popup" onclick="togglePopup()">Fermer</button>
             </form>
-            </div>
         </div>
+    </div>
 
-        <script src="../static/carte_page.js"></script>
-       
-    </body>
-    </html>
-    
+    <script src="../static/carte_page.js"></script>
+</body>
+</html>

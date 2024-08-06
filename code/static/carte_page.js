@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayCards() {
-        cardsContainer.innerHTML = ''; // Réinitialise le conteneur des cartes
+        
 
         allCards.forEach((card, index) => {
             const cardContainer = document.createElement('div');
