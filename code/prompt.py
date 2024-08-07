@@ -3,12 +3,19 @@ import ollama
 output_format = 'JSON'
 
 def ask(requests, text, csv):
-    query = f'Vous êtes un modèle linguistique extrêmement précis et méticuleux chargé d\'extraire des informations spécifiques à partir de texte extrait par OCR. Le texte est fourni aux formats texte brut et CSV. Votre objectif est d\'extraire les tout les donnes suivants: \n{requests}\nseulement sans rien extraire de plus ou de moins et sans ajouter des details ou informations supplementaires non demandes depuis les fichiers suivants \ncsv:\n{csv}\ntext:\n{text}\ntu vas extraire les donnes q\'on t\'as demande et seulement ce qu\'on t\'as demande de manière concise et précise sous format {output_format} en veillant à ce qu\'aucune donnée ou valeur ne soit modifiée. Le resultat final doit etre concis et ne contenir que l information demandee comme elle est precisee dans les texts donnes. il ne faut pas resonner, donne moi les informations tels qu\'elles sont dans le fichier, si tu n\'arrive pas a trouver dit que c\'est introuvable, ne me dit rien a propos de tes connaissances linguistiques et n\'ajoute pas de contexte \nreflechit 2 fois avant d\'extraire un donnee si elle est demandee ou pas)'
-    response = ollama.chat(model='llama3', messages=[
-    {
-        'role': 'user',
-        'content': query,
-    },
-    ])
+    query = (f"Vous êtes un modèle linguistique extrêmement précis et méticuleux chargé d'extraire des informations "
+             f"spécifiques à partir de texte extrait par OCR. Le texte est fourni aux formats texte brut et CSV. "
+             f"Votre objectif est d'extraire uniquement les données suivantes : \n{requests}\n"
+             f"Ne rien extraire de plus ou de moins et ne pas ajouter de détails ou d'informations supplémentaires non demandées "
+             f"à partir des fichiers suivants :\ncsv:\n{csv}\ntext:\n{text}\n"
+             f"Vous devez extraire les données demandées et seulement celles demandées de manière concise et précise sous format "
+             f"{output_format}. Aucune donnée ou valeur ne doit être modifiée. Le résultat final doit être concis et "
+             f"ne contenir que l'information demandée, telle qu'elle est spécifiée dans les textes donnés. "
+             f"Si une donnée demandée n'est pas trouvée, indiquer explicitement 'introuvable'. "
+             f"Ne pas mentionner vos connaissances linguistiques et ne pas ajouter de contexte. "
+             f"Assurez-vous que les données extraites sont précises et correspondent exactement à celles présentes dans le texte.")
+
+    response = ollama.chat(model='llama3', messages=[{'role': 'user', 'content': query, },])
+
     response = response['message']['content']
     return response

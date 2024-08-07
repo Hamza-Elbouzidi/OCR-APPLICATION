@@ -6,7 +6,7 @@ from file_to_image import file_to_image
 from paddle_to_text import extract_text
 from paddle_to_csv import extract_csv
 from paddleocr import PaddleOCR
-from prompt import ask
+# from prompt import ask
 import json
 from db.db import db, Card
 
@@ -161,9 +161,11 @@ def upload_file():
         text = extract_text(paddle_output)
         csv = extract_csv(paddle_output, image_path)
 
-        answer = ask(card_data, text, csv)
-        print(answer)
-        save_json_file(answer, image_path)
+        print(f'\n\n\n\n{text}\n\n\n\n{csv}\n\n\n\n')
+
+        # answer = ask(card_data, text, csv)
+        # print(answer)
+        # save_json_file(answer, image_path)
 
     delete_temp_files()
 
