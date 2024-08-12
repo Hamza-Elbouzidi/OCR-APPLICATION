@@ -6,7 +6,7 @@ from file_to_image import file_to_image
 from paddle_to_text import extract_text
 from paddle_to_csv import extract_csv
 from paddleocr import PaddleOCR
-# from prompt import ask
+from prompt import ask
 import json
 from db.db import db, Card
 
@@ -98,15 +98,14 @@ def delete_temp_files():
 def index():
     cards = Card.query.all()
     app.logger.debug('Cards retrieved: %s', cards)
-    for card in cards:
-        card.data_ids = json.loads(card.data_ids)
     return render_template('index.html', cards=cards)
 
 @app.route('/admin/cards/add', methods=['POST'])
 def add_card():
     title = request.form['title']
-    data_ids = json.dumps(request.form.getlist('data_ids'))  # Handle multiple data fields
-    new_card = Card(title=title, data_ids=data_ids)
+    json_structure = request.form['json_structure']
+    description = request.form['description']
+    new_card = Card(title=title, json_structure=json_structure, description=description)
     db.session.add(new_card)
     db.session.commit()
     return redirect(url_for('admin_cards'))
@@ -115,7 +114,8 @@ def add_card():
 def update_card(card_id):
     card = Card.query.get(card_id)
     card.title = request.form['title']
-    card.data_ids = json.dumps(request.form.getlist('data_ids'))
+    card.json_structure = request.form['json_structure']
+    card.description = request.form['description']
     db.session.commit()
     return redirect(url_for('admin_cards'))
 
@@ -128,9 +128,18 @@ def upload_file():
     files = request.files.getlist('files')  # Get the list of files
     card_data_raw = request.form['cardData']
     print(f"Raw card data: {card_data_raw}")  # Print the raw card data for debugging
-    
+
     try:
+        # Decode the JSON-encoded string
         card_data = json.loads(card_data_raw)
+        print(f"Parsed card data: {card_data}")  # Print the parsed card data for debugging
+
+        # Ensure card_data is a dictionary and extract values
+        if isinstance(card_data, dict):
+            json_structure = card_data.get('json_structure', '{}')
+            description = card_data.get('description', '')
+        else:
+            return jsonify({'error': 'Invalid card data format'}), 400
     except json.JSONDecodeError as e:
         print(f"JSONDecodeError: {e}")
         return jsonify({'error': 'Invalid card data format'}), 400
@@ -161,17 +170,15 @@ def upload_file():
         text = extract_text(paddle_output)
         csv = extract_csv(paddle_output, image_path)
 
-        print(f'\n\n\n\n{text}\n\n\n\n{csv}\n\n\n\n')
-
-        # answer = ask(card_data, text, csv)
-        # print(answer)
-        # save_json_file(answer, image_path)
+        # Call the LLM with the correct parameters
+        answer = ask(json_structure, description, text, csv)
+        print(answer)
+        save_json_file(answer, image_path)
 
     delete_temp_files()
 
     # Return a success message
     return jsonify({'message': 'Files processed and uploaded successfully!'}), 200
-
 
 @app.route('/preview')
 def preview():
@@ -189,8 +196,6 @@ def Admin_créer_carte():
 @app.route('/Admin_carte_page')
 def admin_carte_page():
     cards = Card.query.all()
-    for card in cards:
-        card.data_ids = json.loads(card.data_ids)
     return render_template('Admin_carte_page.html', cards=cards)
 
 @app.route('/preview/edit')
@@ -208,5 +213,4 @@ def save_data():
     return jsonify({"message": "Data saved successfully!"})
 
 if __name__ == '__main__':
-    
     app.run(host='0.0.0.0', port=5000, debug=True)

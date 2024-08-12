@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileBlock = document.querySelector('.file-block');
     const uploadButton = document.querySelector('.upload-button');
     const cards = document.querySelectorAll('.card'); // Ensure card elements are selected
-    
+
     let selectedFiles = [];
-    let selectedCardData = '';
+    let selectedCardData = null;
 
     // Handle file selection
     fileUploadInput.addEventListener('change', (event) => {
@@ -60,11 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => {
             if (card.classList.contains('selected')) {
                 card.classList.remove('selected');
-                selectedCardData = ''; // Clear selected card data
+                selectedCardData = null; // Clear selected card data
             } else {
                 cards.forEach(c => c.classList.remove('selected'));
                 card.classList.add('selected');
-                selectedCardData = JSON.stringify(card.dataset.cardIds); // Ensure it is a JSON string
+                selectedCardData = {
+                    json_structure: card.dataset.cardJsonStructure,
+                    description: card.dataset.cardDescription // Ensure this is the correct dataset attribute
+                };
             }
             console.log("Selected Card Data:", selectedCardData); // For debugging
             updateUploadButtonState();
@@ -86,10 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle file upload
     uploadButton.addEventListener('click', () => {
-        console.log("Upload Button Clicked");
         if (selectedFiles.length > 0 && selectedCardData) {
+            console.log("Upload Button Clicked");
+            uploadButton.disabled = true; // Disable button during upload
             uploadFiles(selectedFiles, selectedCardData);
         } else {
+            console.log("Cannot upload: Files or card data missing");
             const cannotUploadMessage = document.querySelector('.cannot-upload-message');
             cannotUploadMessage.style.display = 'block';
             setTimeout(() => {
@@ -102,30 +107,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function uploadFiles(files, cardData) {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
-        formData.append('cardData', cardData); // Ensure cardData is correctly appended
-
+        formData.append('cardData', JSON.stringify(cardData)); 
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/upload', true);
 
         xhr.upload.addEventListener('progress', (event) => {
-            if (event.lengthComputable) {
-                const percentComplete = (event.loaded / event.total) * 100;
-                progressBar.style.width = percentComplete + '%';
-            }
+            
         });
 
         xhr.addEventListener('load', () => {
             if (xhr.status === 200) {
-                progressBar.style.width = '100%';
-                dynamicMessage.textContent = 'Files uploaded successfully!';
-                window.location.href = '/preview'; // Redirect to results page
+                console.log('Files uploaded successfully!');
+                uploadButton.disabled = false; 
+                window.location.href = '/preview'; 
             } else {
-                dynamicMessage.textContent = 'Upload failed.';
+                console.error('Upload failed.');
+                uploadButton.disabled = false; 
             }
         });
 
         xhr.addEventListener('error', () => {
-            dynamicMessage.textContent = 'Upload failed.';
+            console.error('Upload failed.');
+            uploadButton.disabled = false; 
         });
 
         xhr.send(formData);
