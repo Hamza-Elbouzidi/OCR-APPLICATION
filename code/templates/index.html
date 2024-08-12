@@ -21,7 +21,7 @@
                 <label for="file-upload">or select files from your computer</label>
                 <input type="file" id="file-upload" class="default-file-input" name="files" multiple required>
             </div>
-            <button class="upload-button" disabled>Upload</button>
+            <button id="upload-button" class="upload-button" disabled>Upload</button>
             <div class="progress-bar"></div>
             <div class="cannot-upload-message">Cannot upload files. Please select files.</div>
             <div class="file-block">
@@ -30,7 +30,10 @@
         </div>
         <div class="cards-wrapper">
             {% for card in cards %}
-            <div class="card" data-card-ids='{{ card.data_ids | tojson }}' onclick="selectCard(this)">
+            <div class="card" data-card-title="{{ card.title }}"
+                 data-card-json-structure='{{ card.json_structure | tojson }}'
+                 data-card-description="{{ card.description }}"
+                 onclick="selectCard(this)">
                 <h3>{{ card.title }}</h3>
             </div>
             {% endfor %}
