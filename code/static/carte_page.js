@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="validate-button">Valider</button>
             </div>
         `;
+        
 
         // Ajouter la carte au conteneur des cartes
         cardsWrapper.appendChild(newCard);
