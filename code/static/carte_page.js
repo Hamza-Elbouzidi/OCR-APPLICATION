@@ -1,189 +1,157 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const cardsContainer = document.getElementById('cards-container');
-    const editForm = document.getElementById('edit-form');
+    const confirmDeleteDialog = document.getElementById('confirm-delete-dialog');
+    const deleteYesButton = document.getElementById('delete-yes');
+    const deleteNoButton = document.getElementById('delete-no');
+    const editCardModal = document.getElementById('edit-card-modal');
     const editCardForm = document.getElementById('edit-card-form');
-    const editFieldsContainer = document.getElementById('edit-fields-container');
-    const addFieldButton = document.getElementById('add-field-button');
+    const closeEditModalButton = document.getElementById('close-edit-modal');
+    const createCardModal = document.getElementById('create-card-modal');
+    const createCardForm = document.getElementById('create-card-form');
+    const closeCreateModalButton = document.getElementById('close-create-modal');
+    const createCardButton = document.getElementById('btn1');  // Bouton de création de carte
+    const cardsWrapper = document.querySelector('.cards-wrapper');
 
-    let allCards = [];
+    let selectedCard = null;
 
-    function loadCards() {
-        const cards = JSON.parse(localStorage.getItem('cards')) || [];
-        allCards = cards;
-        displayCards();
-    }
-
-    function displayCards() {
-        
-
-        allCards.forEach((card, index) => {
-            const cardContainer = document.createElement('div');
-            cardContainer.classList.add('card'); // Ajoute une classe CSS à la carte
-
-            if (card.isNoisy) {
-                cardContainer.classList.add('noisy'); // Applique la classe noisy si la carte est "bruyante"
-            }
-
-            const cardName = document.createElement('h5');
-            cardName.classList.add('text-carte');
-            cardName.textContent = card.name; // Définit le nom de la carte
-            cardContainer.appendChild(cardName); // Ajoute le nom au conteneur de la carte
-
-            // Création du conteneur des boutons
-            const buttonContainer = document.createElement('div');
-            buttonContainer.classList.add('button-container');
-
-            // Bouton Bruyant
-            const noisyButton = document.createElement('button');
-            noisyButton.innerHTML = '<i class="bi bi-eye"></i>';
-            noisyButton.classList.add('noisy-button');
-            noisyButton.addEventListener('click', () => handleNoisyClick(index));
-            buttonContainer.appendChild(noisyButton);
-
-            // Bouton Annuler
-            const cancelButton = document.createElement('button');
-            cancelButton.textContent = 'Annuler';
-            cancelButton.classList.add('cancel-button');
-            cancelButton.addEventListener('click', () => handleCancelClick(index));
-            buttonContainer.appendChild(cancelButton);
-
-            // Bouton Valider
-            const validateButton = document.createElement('button');
-            validateButton.textContent = 'Valider';
-            validateButton.classList.add('validate-button');
-            validateButton.addEventListener('click', () => handleValidateClick(index));
-            buttonContainer.appendChild(validateButton);
-
-            // Bouton Modifier
-            const editButton = document.createElement('button');
-            editButton.innerHTML = '<i class="bi bi-pencil-square"></i>'; // Icône d'édition
-            editButton.classList.add('edit-button');
-            editButton.addEventListener('click', () => editCard(index));
-            buttonContainer.appendChild(editButton);
-
-            // Ajout du conteneur des boutons au conteneur de la carte
-            cardContainer.appendChild(buttonContainer);
-
-            // Ajout du conteneur de la carte au conteneur principal
-            cardsContainer.appendChild(cardContainer);
-        });
-    }
-
-    function handleNoisyClick(index) {
-        const card = allCards[index];
-        card.isNoisy = !card.isNoisy; // Bascule la valeur de isNoisy
-        localStorage.setItem('cards', JSON.stringify(allCards));
-        displayCards();
-    }
-
-    function handleCancelClick(index) {
-        // Affiche une boîte de dialogue de confirmation
-        const isConfirmed = confirm("Êtes-vous sûr de vouloir supprimer cette carte ?");
-
-        // Si l'utilisateur clique sur "OK", continue avec la suppression
-        if (isConfirmed) {
-            allCards.splice(index, 1);
-            localStorage.setItem('cards', JSON.stringify(allCards));
-            displayCards();
-        }
-        // Sinon, ne fait rien
-    }
-
-    function handleValidateClick(index) {
-        console.log('Bouton Valider cliqué pour la carte index', index);
-        // Implémentez la logique de validation ici si nécessaire
-    }
-
-    function editCard(index) {
-        const card = allCards[index];
-        document.getElementById('edit-card-id').value = index;
-        document.getElementById('edit-card-name').value = card.name;
-        
-        editFieldsContainer.innerHTML = '';
-        card.fields.forEach(field => {
-            const fieldGroup = document.createElement('div');
-            fieldGroup.classList.add('form-group', 'field-group');
-            fieldGroup.innerHTML = `
-                <label for="field-name">Nom du Champ</label>
-                <input type="text" class="field-name" value="${field.name}" required>
-                <label for="field-type">Type du Champ</label>
-                <select class="field-type" required>
-                    <option value="" disabled>Choisissez le type de champ</option>
-                    <option value="text" ${field.type === 'text' ? 'selected' : ''}>Texte</option>
-                    <option value="number" ${field.type === 'number' ? 'selected' : ''}>Nombre</option>
-                    <option value="email" ${field.type === 'email' ? 'selected' : ''}>Email</option>
-                    <option value="address" ${field.type === 'address' ? 'selected' : ''}>Adresse</option>
-                    <option value="date" ${field.type === 'date' ? 'selected' : ''}>Date</option>
-                    <option value="table" ${field.type === 'table' ? 'selected' : ''}>Tableau</option>
-                </select>
-                <button type="button" class="remove-field-button">Supprimer</button>
-            `;
-            editFieldsContainer.appendChild(fieldGroup);
-            
-            // Ajouter un gestionnaire d'événement pour supprimer le champ
-            fieldGroup.querySelector('.remove-field-button').addEventListener('click', () => {
-                confirmDeletion(fieldGroup);
+    // Fonction pour gérer les clics sur les boutons des cartes
+    function setupCardButtons() {
+        // Gérer les boutons de suppression
+        document.querySelectorAll('.card .cancel-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedCard = e.target.closest('.card');
+                confirmDeleteDialog.style.display = 'block';
             });
         });
 
-        editForm.style.display = 'block';
-    }
+        // Gérer les boutons d'édition
+        document.querySelectorAll('.card .edit-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedCard = e.target.closest('.card');
+                if (selectedCard) {
+                    // Remplir le formulaire avec les données de la carte
+                    document.getElementById('card-title').value = selectedCard.dataset.cardTitle;
+                    document.getElementById('card-description').value = selectedCard.dataset.cardDescription;
+                    // Afficher la boîte modale
+                    editCardModal.style.display = 'block';
+                } else {
+                    console.log('Aucune carte sélectionnée');
+                }
+            });
+        });
 
-    function addField() {
-        const fieldGroup = document.createElement('div');
-        fieldGroup.classList.add('form-group', 'field-group');
-        fieldGroup.innerHTML = `
-            <label for="field-name">Nom du Champ</label>
-            <input type="text" class="field-name" placeholder="Nom du champ" required>
-            <label for="field-type">Type du Champ</label>
-            <select class="field-type" required>
-                <option value="" disabled selected>Choisissez le type de champ</option>
-                <option value="text">Texte</option>
-                <option value="number">Nombre</option>
-                <option value="email">Email</option>
-                <option value="address">Adresse</option>
-                <option value="date">Date</option>
-                <option value="table">Tableau</option>
-            </select>
-            <button type="button" class="remove-field-button">Supprimer</button>
-        `;
-        editFieldsContainer.appendChild(fieldGroup);
-
-        // Ajouter un gestionnaire d'événement pour supprimer le champ
-        fieldGroup.querySelector('.remove-field-button').addEventListener('click', () => {
-            confirmDeletion(fieldGroup);
+        // Gérer les boutons de changement de couleur
+        document.querySelectorAll('.card .color-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = e.target.closest('.card');
+                const newColor = prompt('Entrez la nouvelle couleur en hex (ex. #FF5733) :');
+                if (newColor) {
+                    card.style.backgroundColor = newColor;
+                }
+            });
         });
     }
 
-    function confirmDeletion(fieldGroup) {
-        const isConfirmed = confirm("Êtes-vous sûr de vouloir supprimer ce champ ?");
-        
-        if (isConfirmed) {
-            fieldGroup.remove();
+    setupCardButtons();
+
+    // Gérer la confirmation de suppression
+    deleteYesButton.addEventListener('click', () => {
+        if (selectedCard) {
+            selectedCard.remove();
+            confirmDeleteDialog.style.display = 'none';
+            selectedCard = null;
         }
-    }
-
-    addFieldButton.addEventListener('click', addField);
-
-    editCardForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const index = document.getElementById('edit-card-id').value;
-        const cardName = document.getElementById('edit-card-name').value;
-        const fieldGroups = editFieldsContainer.querySelectorAll('.field-group');
-        const fields = Array.from(fieldGroups).map(group => ({
-            name: group.querySelector('.field-name').value,
-            type: group.querySelector('.field-type').value
-        }));
-        
-        allCards[index] = {
-            name: cardName,
-            fields: fields
-        };
-        
-        localStorage.setItem('cards', JSON.stringify(allCards));
-        displayCards();
-        editForm.style.display = 'none';
     });
 
-    loadCards();
+    deleteNoButton.addEventListener('click', () => {
+        confirmDeleteDialog.style.display = 'none';
+        selectedCard = null;
+    });
+
+    // Gérer la fermeture du formulaire modale
+    closeEditModalButton.addEventListener('click', () => {
+        editCardModal.style.display = 'none';
+    });
+
+    // Gérer la soumission du formulaire d'édition
+    editCardForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (selectedCard) {
+            // Mettre à jour les données de la carte avec les nouvelles valeurs
+            selectedCard.dataset.cardTitle = document.getElementById('card-title').value;
+            selectedCard.dataset.cardDescription = document.getElementById('card-description').value;
+            // Mettre à jour le contenu de la carte affiché
+            selectedCard.querySelector('h3').textContent = document.getElementById('card-title').value;
+            selectedCard.querySelector('p').textContent = document.getElementById('card-description').value;
+            // Fermer la boîte modale
+            editCardModal.style.display = 'none';
+        } else {
+            console.log('Aucune carte sélectionnée pour la mise à jour');
+        }
+    });
+
+    // Ouvrir la boîte modale de création de carte
+    createCardButton.addEventListener('click', () => {
+        createCardModal.style.display = 'block';
+    });
+
+    // Fermer la boîte modale de création de carte
+    closeCreateModalButton.addEventListener('click', () => {
+        createCardModal.style.display = 'none';
+    });
+
+    // Soumettre le formulaire de création de carte
+    createCardForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Récupérer les valeurs du formulaire
+        const newCardTitle = document.getElementById('new-card-title').value;
+        const newCardDescription = document.getElementById('new-card-description').value;
+
+        // Créer une nouvelle carte
+        const newCard = document.createElement('div');
+        newCard.classList.add('card');
+        newCard.dataset.cardTitle = newCardTitle;
+        newCard.dataset.cardDescription = newCardDescription;
+        newCard.innerHTML = `
+            <h3>${newCardTitle}</h3>
+            <p>${newCardDescription}</p>
+            <div class="button-container">
+                <button class="edit-button"><i class="bi bi-pencil-square"></i></button>
+                <button class="noisy-button"><i class="bi bi-eye"></i></button>
+                <button class="cancel-button" style="width:100px ;">Supprimer</button>
+                <button class="validate-button">Valider</button>
+            </div>
+        `;
+
+        // Ajouter la carte au conteneur des cartes
+        cardsWrapper.appendChild(newCard);
+
+        // Réinitialiser le formulaire et fermer la modale
+        createCardForm.reset();
+        createCardModal.style.display = 'none';
+
+        // Reconfigurer les boutons des nouvelles cartes
+        setupCardButtons();
+    });
 });
+
+const searchInput = document.getElementById('search-input');
+    const cards = document.querySelectorAll('.card');
+
+    searchInput.addEventListener('input', function() {
+        const searchValue = searchInput.value.toLowerCase();
+
+        cards.forEach(card => {
+            const title = card.getAttribute('data-card-title').toLowerCase();
+            const description = card.getAttribute('data-card-description').toLowerCase();
+
+            if (title.includes(searchValue) || description.includes(searchValue)) {
+                card.style.display = ''; // Affiche la carte
+            } else {
+                card.style.display = 'none'; // Cache la carte
+            }
+        });
+    });

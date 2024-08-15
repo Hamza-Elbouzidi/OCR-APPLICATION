@@ -1,11 +1,10 @@
 import os
 import magic
 from pdf2image import convert_from_path
-import comtypes.client
-import comtypes
 import shutil
 import logging
 from PIL import Image
+from docx2pdf import convert as docx_to_pdf  # This will be used for DOCX to PDF conversion
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -28,29 +27,12 @@ def convert_pdf_to_images(pdf_path, output_dir):
     except Exception as e:
         logging.error(f'Error converting {pdf_path} to image: {e}')
 
-def convert_docx_to_pdf(docx_path, pdf_path):
-    try:
-        # Initialize COM library
-        comtypes.CoInitialize()
-        
-        # Create COM object and convert DOCX to PDF
-        word = comtypes.client.CreateObject('Word.Application')
-        doc = word.Documents.Open(docx_path)
-        doc.SaveAs(pdf_path, FileFormat=17)
-        doc.Close()
-        word.Quit()
-    except Exception as e:
-        logging.error(f'Error converting {docx_path} to PDF: {e}')
-        raise
-    finally:
-        # Uninitialize COM library
-        comtypes.CoUninitialize()
-
 def convert_docx_to_images(docx_path, output_dir):
     docx_name = os.path.splitext(os.path.basename(docx_path))[0]
     pdf_path = os.path.join(output_dir, f'{docx_name}.pdf')
     try:
-        convert_docx_to_pdf(docx_path, pdf_path)
+        # Convert DOCX to PDF using docx2pdf
+        docx_to_pdf(docx_path, pdf_path)
         convert_pdf_to_images(pdf_path, output_dir)
     except Exception as e:
         logging.error(f'Conversion failed: {e}')
@@ -77,7 +59,6 @@ def stack_images(dir, name):
         os.remove(os.path.join(dir, i))
 
 def process_file(file_path, base_output_dir):
-    # file_name = os.path.splitext(os.path.basename(file_path))[0]
     file_name = os.path.basename(file_path)
     output_dir = os.path.join(base_output_dir, file_name)
     os.makedirs(output_dir, exist_ok=True)

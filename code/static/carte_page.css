@@ -13,7 +13,7 @@ body {
     font-family: Arial, sans-serif;
     padding-top: 80px; /* Ajoutez un padding-top pour éviter que le contenu soit masqué par le header */
   
-    background: linear-gradient(135deg, #b3badc, rgb(11, 62, 94));
+    background-color: #7d9bc5;
 }
 
 .container {
@@ -206,20 +206,22 @@ h1 {
     
 }
 
-#cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+/* Styles pour la carte */
+.card {
+    width: 200px;
+    padding: 15px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
 }
 
-.card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    margin: 10px;
-    width: 300px;
-    box-shadow: 2px 2px 5px rgba(247, 244, 244, 0.1);
-    
+/* Styles pour le conteneur des cartes */
+.cards-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px;
 }
 
 .button-container {
@@ -247,6 +249,9 @@ h1 {
     background-color: lightcoral;
     
 }
+
+
+
 
 
 #edit-form{
@@ -441,4 +446,484 @@ right: 150px;
 margin-top: 56px;
 
 
+}
+
+
+
+
+
+
+
+
+    /* Styles précédents ici... */
+
+    #cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px;
+        width: 330px;
+        height: 170px;
+
+        box-shadow: rgba(12, 56, 75, 0.598) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+        transition: background-color 0.3s; /* Animation pour le changement de couleur */
+    }
+
+    .button-container {
+        margin-top: 10px;
+    }
+
+    .button-container button {
+        display: inline-block;
+        width: 80px;
+        margin-right: 5px; /* Espace entre les boutons */
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .edit-button {
+        background-color: rgb(219, 238, 244);
+        position: absolute; /* ou relative selon le contexte */
+        top: 10px; /* Ajuster la position */
+        right: 10px; /* Ajuster la position */
+       
+        
+    }
+     
+    .button-container .edit-button {
+        width: 50px;
+        
+
+    }
+
+    .validate-button{
+        background-color: rgb(16, 138, 29);
+        position: absolute; /* ou relative selon le contexte */
+        bottom:  15px; /* Ajuster la position */
+        right: 15px;
+       
+    }
+
+   
+
+    .cancel-button{
+        background-color: rgb(68, 93, 130);
+        bottom: -38px;
+        position: relative;
+        right: -40px;
+      
+    }
+
+
+    .cancel-button:hover{
+        background-color: #e74c3c;
+    }
+
+    .noisy-button{
+        background-color: #2ba0c6;
+        
+    }
+
+    .noisy-button:hover{
+        background-color: #7cc4dc;
+        
+    }
+
+    .button-container .noisy-button{
+        width:50px;
+        bottom: -38px;
+        position: relative;
+        right: -37px;
+    }
+
+    .button-container .noisy-button i{
+        color:white;
+    }
+
+
+    .cancel-button{
+        background-color: #0056b3;
+        
+    }
+
+    
+    
+
+    .delete-button {
+        background-color:#0056b3;
+    }
+
+    .edit-button:hover {
+        background-color: #aad6e9;
+    }
+
+    .delete-button:hover {
+        background-color: #f88c8c;
+    }
+
+    /* Styles pour les boutons et la boîte de confirmation */
+    .confirm-dialog {
+        display: none; /* Caché par défaut */
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    
+    .confirm-dialog button {
+        margin: 5px;
+    }
+
+    .remove-field-button{
+        border-radius: 40px;
+        background-color: rgba(254, 142, 6, 0.936);
+       
+        
+        width: 140px;
+       margin-right: 90px;
+       margin-bottom: 60px;
+    }
+
+    .remove-field-button:hover {
+        background-color:  rgb(250, 187, 0);
+    }
+    
+
+    #enregistrer_btn{
+        width: 280px;
+        border-radius: 10px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Styles du popup */
+    .popup {
+        display: none; /* Caché par défaut */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .popup-content {
+        max-width: 800px;
+        background: #fff;
+        width: 800px;
+        padding: 25px 40px 10px 40px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 30px;
+    }
+
+    .popup-content .text {
+        text-align: center;
+        font-size: 41px;
+        font-weight: 600;
+        background: -webkit-linear-gradient(right, #192a96, #0172ea, #0e1075, #ea6e01);
+        background-clip: text;
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent;
+    }
+
+    .popup-content form {
+        padding: 30px 0 0 0;
+     
+    }
+
+    .popup-content form .form-row {
+        display: flex;
+        margin: 32px 0;
+    }
+
+    form .form-row .input-data {
+        width: 100%;
+        margin: 0 20px;
+        position: relative;
+    }
+
+
+    form .form-row .textarea {
+        height: auto;
+    }
+
+
+    .input-data input,
+    .textarea textarea {
+    display: block;
+    width: 100%;
+    height: 40px; 
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+    font-size: 17px;
+    background: transparent;
+    padding: 10px;
+    outline: none;
+    box-sizing: border-box;
+    
+}
+
+.input-data input:focus,
+.textarea textarea:focus {
+    border-bottom: 2px solid #3498db; /* Change color on focus */
+}
+
+.input-data input + label,
+.textarea textarea + label {
+    position: absolute;
+    pointer-events: none;
+    bottom: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.input-data input:focus + label,
+.input-data input:valid + label,
+.textarea textarea:focus + label,
+.textarea textarea:valid + label {
+    transform: translateY(-20px);
+    font-size: 14px;
+    color: #3498db;
+}
+
+.textarea textarea {
+    resize: none;
+    padding-top: 10px;
+}
+
+.input-data .underline {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+}
+
+.input-data .underline:before {
+    position: absolute;
+    content: "";
+    height: 1px;
+    width: 100%;
+    background: #a3c6dd;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+.input-data input:focus ~ .underline:before,
+.input-data input:valid ~ .underline:before,
+.textarea textarea:focus ~ .underline:before,
+.textarea textarea:valid ~ .underline:before {
+    transform: scale(1);
+}
+
+.submit-btn .input-data {
+    overflow: hidden;
+    height: 45px!important;
+    width: 25%!important;
+}
+
+
+
+.input-data .inner {
+    height: 100%;
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    background: -webkit-linear-gradient(right, #192a96, #0172ea, #0e1075, #ea6e01);
+    transition: all 0.4s;
+}
+
+
+@media (max-width: 700px) {
+    .container .text {
+        font-size: 30px;
+    }
+    .container form {
+        padding: 10px 0 0 0;
+    }
+    .container form .form-row {
+        display: block;
+    }
+    form .form-row .input-data {
+        margin: 35px 0!important;
+    }
+    .submit-btn .input-data {
+        width: 40%!important;
+    }
+}
+
+.form-buttons {
+    display: flex;
+    gap: -8px; /* Espace entre les boutons */
+    margin-bottom: 15px; /* Espace sous le groupe de boutons */
+   
+}
+
+.form-buttons #add-field-bt , #save-card-bt{
+    background: #ffffff;
+    border: 1px solid #57b5d4;
+    color: #3d82b7;
+    padding: 15px ;
+    font-weight: 100;
+    text-decoration: none;
+    transition: .225s ease all;
+    box-shadow: 3px 3px 0px rgba(15, 68, 201, 0.58);
+    cursor: pointer;
+    flex: 1; 
+    margin: 0; 
+}
+
+
+.form-buttons button:hover,
+.form-buttons button:focus {
+    transform: translate(-4px, -4px);
+    box-shadow: 7px 7px 0px rgba(64, 135, 193, 0.594);
+    color: rgb(0, 0, 0);
+}
+
+
+
+
+
+    .popup-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 20px;
+        color: #333;
+    }
+
+
+
+    #confirm-delete-dialog {
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        text-align: center;
+    }
+    #confirm-delete-dialog button {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    #confirm-delete-dialog button#delete-yes {
+        background-color: #3DB74E;
+        color: white;
+    }
+    #confirm-delete-dialog button#delete-no {
+        background-color: #f44336;
+        color: white;
+    }
+    
+
+
+    #edit-card-modal {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        text-align: center;
+    }
+    #edit-card-modal form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    #edit-card-modal input, #edit-card-modal textarea {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        max-width: 300px;
+    }
+    #edit-card-modal button {
+        margin: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    #edit-card-modal button[type="submit"] {
+        background-color: #3DB74E;
+        color: white;
+        border: none;
+        border-radius: 20px;
+    }
+    #edit-card-modal button#close-edit-modal {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 20px;
+    }
+    
+
+    .text-eddit{
+        text-align: center;
+        font-size: 41px;
+        font-weight: 600;
+        background: -webkit-linear-gradient(right, #192a96, #0172ea, #0e1075, #1c035d);
+        background-clip: text;
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent;
+    }
+
+
+    .text-creer{
+        text-align: center;
+        font-size: 41px;
+        font-weight: 600;
+        background: -webkit-linear-gradient(right, #192a96, #0172ea, #0e1075, #1c035d);
+        background-clip: text;
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent;
+    }
+
+
+
+   /* Conteneur principal du popup */
+#popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Opacité de fond */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999; /* Assurez-vous que le popup est au-dessus des autres éléments */
 }
