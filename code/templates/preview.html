@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="container">
-        <div id="content-wrapper">
+        <div class="content-wrapper">
             <h1>Extracted Data</h1>
             <div id="json-data-container"></div>
             <div class="button-group">
@@ -20,6 +20,7 @@
             </div>
         </div>
     </div>
+
     <div id="json-data" style="display: none;">{{ json_data | tojson | safe }}</div>
     <script src="../static/preview.js"></script>
 </body>

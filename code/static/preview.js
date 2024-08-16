@@ -1,18 +1,18 @@
-function renderJsonItem(item) {
+function renderJsonItem(item, key = null) {
     if (item === null || item === undefined) {
-        const nullPlaceholder = document.createElement('p');
-        nullPlaceholder.textContent = 'No data available';
-        return nullPlaceholder;
+        const p = document.createElement('p');
+        p.textContent = 'No data available';
+        return p;
     }
 
     if (typeof item === 'object' && !Array.isArray(item)) {
         const ul = document.createElement('ul');
-        for (const [key, value] of Object.entries(item)) {
+        for (const [subkey, subvalue] of Object.entries(item)) {
             const li = document.createElement('li');
             const strong = document.createElement('strong');
-            strong.textContent = `${key}: `;
+            strong.textContent = `${subkey}: `;
             li.appendChild(strong);
-            li.appendChild(renderJsonItem(value));
+            li.appendChild(renderJsonItem(subvalue, subkey));
             ul.appendChild(li);
         }
         return ul;
@@ -22,9 +22,9 @@ function renderJsonItem(item) {
             const thead = document.createElement('thead');
             const tbody = document.createElement('tbody');
             const trHead = document.createElement('tr');
-            for (const key of Object.keys(item[0])) {
+            for (const header of Object.keys(item[0])) {
                 const th = document.createElement('th');
-                th.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+                th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
                 trHead.appendChild(th);
             }
             thead.appendChild(trHead);
@@ -50,7 +50,10 @@ function renderJsonItem(item) {
             return ul;
         }
     } else {
-        return document.createTextNode(item);
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = item;
+        return input;
     }
 }
 
@@ -58,40 +61,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const jsonDataContainer = document.getElementById('json-data-container');
     const jsonDataElement = document.getElementById('json-data');
 
-    // Ensure JSON data element exists and has content
     if (jsonDataElement && jsonDataElement.textContent) {
         try {
             const jsonData = JSON.parse(jsonDataElement.textContent);
-            console.log('Parsed JSON Data:', jsonData); // Debugging statement
+            console.log('Parsed JSON Data:', jsonData);
 
-            for (const [key, value] of Object.entries(jsonData)) {
-                const section = document.createElement('div');
-                section.classList.add('section');
-                
-                const h2 = document.createElement('h2');
-                h2.textContent = key.charAt(0).toUpperCase() + key.slice(1);
-                section.appendChild(h2);
-            
-                const jsonContent = document.createElement('div');
-                jsonContent.classList.add('json-content');
-                if (value === null || value === undefined) {
-                    console.log('value is null or undefined:', value);
-                    const nullPlaceholder = document.createElement('p');
-                    nullPlaceholder.textContent = 'No data available';
-                    jsonContent.appendChild(nullPlaceholder);
-                } else {
-                    console.log('Rendering value:', value);
-                    jsonContent.appendChild(renderJsonItem(value));
+            if (typeof jsonData === 'object' && jsonData !== null) {
+                for (const [key, value] of Object.entries(jsonData)) {
+                    const section = document.createElement('div');
+                    section.classList.add('section');
+
+                    const h2 = document.createElement('h2');
+                    h2.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+                    section.appendChild(h2);
+
+                    const jsonContent = document.createElement('div');
+                    jsonContent.classList.add('json-content');
+                    jsonContent.appendChild(renderJsonItem(value, key));
+
+                    section.appendChild(jsonContent);
+                    jsonDataContainer.appendChild(section);
                 }
-                
-                section.appendChild(jsonContent);
-                jsonDataContainer.appendChild(section);
+            } else {
+                console.error('Expected JSON data to be an object, but received:', jsonData);
+                const p = document.createElement('p');
+                p.textContent = 'No data available';
+                jsonDataContainer.appendChild(p);
             }
-            
         } catch (error) {
             console.error('Error parsing JSON data:', error);
+            const p = document.createElement('p');
+            p.textContent = 'Error parsing JSON data';
+            jsonDataContainer.appendChild(p);
         }
     } else {
         console.error('No JSON data found in the DOM element.');
+        const p = document.createElement('p');
+        p.textContent = 'No JSON data found';
+        jsonDataContainer.appendChild(p);
     }
 });
