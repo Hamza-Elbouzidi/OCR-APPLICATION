@@ -48,6 +48,16 @@ def get_images_paths():
                     images_paths.append(f_path)
     return images_paths
 
+def convert_type(value):
+    try:
+        value = value.replace(' ', '').replace(',', '.')
+        if '.' not in value:
+            return int(value)
+        return float(value)
+    except ValueError:
+        return value
+
+
 def save_json_file(text, image_path):
     json_name = f'{os.path.splitext(os.path.basename(image_path))[0]}'
     output_file_name = f"{json_name}.json"
@@ -60,7 +70,6 @@ def save_json_file(text, image_path):
         index += 1   
 
     try:
-        # Find and extract the JSON content
         start_index = text.find('[')  # Start of JSON array
         end_index = text.rfind(']') + 1  # End of JSON array
 
@@ -69,11 +78,16 @@ def save_json_file(text, image_path):
             app.logger.debug(f'Extracted JSON content: {json_content}')
 
             try:
-                # Attempt to load the JSON data
                 data = json.loads(json_content)
-                if not isinstance(data, list):  # Ensure it's a list
+                if not isinstance(data, list):
                     app.logger.warning(f"Expected a JSON array but got: {data}")
-                    data = []  # Fallback to empty list
+                    data = []
+
+                # Convert types in data
+                for item in data:
+                    for key, value in item.items():
+                        item[key] = convert_type(value)
+
             except json.JSONDecodeError as e:
                 app.logger.error(f"Failed to decode JSON: {e}")
                 data = []  # Fallback to empty list
@@ -81,7 +95,6 @@ def save_json_file(text, image_path):
             app.logger.warning(f"No JSON array found in text: {text}")
             data = []  # Fallback to empty list
 
-        # Save the valid JSON content to a file
         with open(output_file_path, 'w') as file:
             json.dump(data, file, indent=4)
         app.logger.info(f"JSON file saved: {output_file_path}")
@@ -89,6 +102,7 @@ def save_json_file(text, image_path):
     except Exception as e:
         app.logger.error(f"Error saving JSON file: {e}")
         return {}
+
 
 
 def load_json_data():
