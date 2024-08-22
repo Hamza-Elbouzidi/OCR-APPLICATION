@@ -35,38 +35,87 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="#" method="get" role="form">
-            <input class="form-control" name="search" type="text" placeholder="Search" aria-label="Search">
+        <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" role="form">
+            <button class="searchButton">
+                <i class="fas fa-search"></i>
+            </button>
+            <input id="search-input" class="form-control" name="search" type="text" placeholder="Search" aria-label="Search">
         </form>
-
+        
         <div class="navbar-nav me-lg-2">
             <div class="nav-item text-nowrap d-flex align-items-center">
-
                 <div class="dropdown ps-3">
                     <div class="container">
-                        <div class="btn" id="btn1"><a href="Admin_créer_carte.html">Créer carte</a></div>
-                        <div class="btn" id="btn2"><a href="#" >Test</a></div>
+                        <div class="btn" id="btn1">Créer carte</div>
+                        <div class="btn" id="btn2"><a href="index.html" >Test</a></div>
                     </div>       
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Boîte de confirmation pour la suppression -->
-    <div id="confirm-delete-dialog" class="confirm-dialog" style="display: none;">
+    <!-- Modale pour créer une carte -->
+     <!-- Container transparent qui occupe tout l'écran -->
+<div id="modal-backdrop-create" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:900;"></div>
+
+    <div id="create-card-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:20px; background:#fff; border:1px solid #ccc; box-shadow:0 0 10px rgba(0,0,0,0.1); z-index:1000; border-radius: 20px;">
+        <h2 class="text-creer">Créer une carte</h2>
+        <form id="create-card-form">
+            <label for="new-card-title">Titre :</label>
+            <input type="text" id="new-card-title" name="new-card-title" required>
+            <br>
+            <label for="new-card-description">Description :</label>
+            <textarea id="new-card-description" name="new-card-description" rows="3" cols="75" required></textarea>
+            <br>
+
+            <br>
+            <label for="new-card-json-structure">Structure :</label>
+            <textarea id="new-card-json-structure" name="new-card-json-structure" rows="4" cols="75" required></textarea>
+            <br>
+            
+           
+
+            <button type="submit" id="creer_car">Créer</button>
+            <button type="button" id="close-create-modal">Annuler</button>
+        </form>
+    </div>
+
+    <!-- Boîte de confirmation pour suppression -->
+    <div id="confirm-delete-dialog" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:20px; background:#fff; border:1px solid #ccc; box-shadow:0 0 10px rgba(0,0,0,0.1);">
         <p>Êtes-vous sûr de vouloir supprimer cette carte ?</p>
         <button id="delete-yes">Oui</button>
         <button id="delete-no">Non</button>
     </div>
 
-    <!-- Boîte de confirmation pour annuler -->
+    <!-- Boîte de confirmation pour annulation -->
     <div id="confirm-cancel-dialog" class="confirm-dialog" style="display: none;">
         <p>Êtes-vous sûr de vouloir annuler cette opération ?</p>
         <button id="cancel-yes">Oui</button>
         <button id="cancel-no">Non</button>
     </div>
 
-    <h1> Cartes</h1>
+ <!-- Container transparent qui occupe tout l'écran -->
+<div id="modal-backdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:900;"></div>
+
+<!-- Formulaire de modification dans une boîte modale -->
+<div id="edit-card-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); padding:20px; background:#fff; border:1px solid #ccc; box-shadow:0 0 10px rgba(0,0,0,0.1); z-index:1000; border-radius: 20px;">
+    <h2 class="text-eddit">Modifier la carte</h2>
+    <form id="edit-card-form">
+        <label for="card-title">Titre :</label>
+        <input type="text" id="card-title" name="card-title" required>
+        <br>
+        <label for="card-description">Description :</label>
+        <textarea id="card-description" name="card-description" rows="4" required></textarea>
+        <br>
+        <label for="card-json-structure">Structure :</label>
+        <textarea id="card-json-structure" name="card-json-structure" rows="4"  required></textarea>
+        <br>
+        <button type="submit">Sauvegarder</button>
+        <button type="button" id="close-edit-modal">Annuler</button>
+    </form>
+</div>
+
+    <!-- <h1>Cartes</h1> -->
     <div class="cards-wrapper">
         {% for card in cards %}
         <div class="card" data-card-title="{{ card.title }}"
@@ -74,26 +123,23 @@
              data-card-description="{{ card.description }}"
              onclick="selectCard(this)">
             <h3>{{ card.title }}</h3>
+            <div class="button-container">
+                <button class="edit-button"><i class="bi bi-pencil-square"></i></button>
+                <button class="noisy-button" style="width:200px ;"><i class="bi bi-eye"  > Aperçu</i></button>
+                <button class="cancel-button" style="width:115px ;">Supprimer</button>
+                <button class="validate-button"  style="width:115px ;">Valider</button>
+            </div>
+           
+            
         </div>
         {% endfor %}
-    </div>
-
-    <!-- Formulaire de modification -->
-    <div id="edit-form" class="modal">
-        <div class="modal-content">
-            <h3> Modifier la carte</h3>
-            <form id="edit-card-form">
-                <input type="hidden" name="card-id" id="edit-card-id">
-                <label for="edit-card-name">Nom de la Carte</label>
-                <input type="text" name="card-name" id="edit-card-name" required>
-                <div id="edit-fields-container"></div>
-                <button type="button" id="add-field-button">Ajouter Champ</button>
-                <button type="submit" id="enregistrer_btn">Enregistrer</button>
-                <button class="btn-close-popup" onclick="togglePopup()">Fermer</button>
-            </form>
-        </div>
     </div>
 
     <script src="../static/carte_page.js"></script>
 </body>
 </html>
+
+
+
+
+
