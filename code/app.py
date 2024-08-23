@@ -1,3 +1,4 @@
+import sqlite3
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 import os
 import shutil
@@ -10,13 +11,16 @@ from prompt import ask
 import json
 from db.db import db, Card
 
+# Get the parent directory of the current file
 parent_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Define directories and database path dynamically
 uploads_dir = os.path.join(parent_path, 'uploads')
 converted_images_dir = os.path.join(parent_path, 'converted_images')
 json_files_dir = os.path.join(parent_path, 'json_outputs')
-db_path = os.path.join(parent_path, 'code', 'instance', 'cards.db')
+db_path = os.path.join(parent_path, 'code', 'instance', 'cards.db')  # Updated dynamically
 
+# Create directories if they don't exist
 os.makedirs(uploads_dir, exist_ok=True)
 os.makedirs(converted_images_dir, exist_ok=True)
 os.makedirs(json_files_dir, exist_ok=True)
@@ -40,13 +44,16 @@ def get_images_paths():
     for d in os.listdir(converted_images_dir):
         d_path = os.path.join(converted_images_dir, d)
         if os.path.isfile(d_path) and is_image(d_path):
-                images_paths.append(d_path)
+            images_paths.append(d_path)
         else:
             for f in os.listdir(d_path):
                 f_path = os.path.join(d_path, f)
                 if os.path.isfile(f_path) and is_image(f_path):
                     images_paths.append(f_path)
     return images_paths
+
+# Remove the old get_db_connection function
+# Instead, use SQLAlchemy to interact with the database
 
 def convert_type(value):
     try:
@@ -56,7 +63,6 @@ def convert_type(value):
         return float(value)
     except ValueError:
         return value
-
 
 def save_json_file(text, image_path):
     json_name = f'{os.path.splitext(os.path.basename(image_path))[0]}'
@@ -103,8 +109,6 @@ def save_json_file(text, image_path):
         app.logger.error(f"Error saving JSON file: {e}")
         return {}
 
-
-
 def load_json_data():
     json_data = {}
     for filename in os.listdir(json_files_dir):
@@ -133,24 +137,39 @@ def index():
     app.logger.debug('Cards retrieved: %s', cards)
     return render_template('index.html', cards=cards)
 
-@app.route('/admin/cards/add', methods=['POST'])
-def add_card():
-    title = request.form['title']
-    json_structure = request.form['json_structure']
-    description = request.form['description']
-    new_card = Card(title=title, json_structure=json_structure, description=description)
+@app.route('/create_card', methods=['POST'])
+def create_card():
+    title = request.form['new_card_title']
+    description = request.form['new_card_description']
+    json_structure = request.form['new_card_json_structure']
+
+    new_card = Card(title=title, description=description, json_structure=json_structure)
     db.session.add(new_card)
     db.session.commit()
-    return redirect(url_for('admin_cards'))
 
-@app.route('/admin/cards/update/<int:card_id>', methods=['POST'])
-def update_card(card_id):
+    return redirect(url_for('admin_carte_page'))
+
+@app.route('/edit_card', methods=['POST'])
+def edit_card():
+    card_id = request.form['card_id']
+    title = request.form['card_title']
+    description = request.form['card_description']
+    json_structure = request.form['card_json_structure']
+
     card = Card.query.get(card_id)
-    card.title = request.form['title']
-    card.json_structure = request.form['json_structure']
-    card.description = request.form['description']
+    card.title = title
+    card.description = description
+    card.json_structure = json_structure
     db.session.commit()
-    return redirect(url_for('admin_cards'))
+
+    return redirect(url_for('admin_carte_page'))
+
+@app.route('/delete_card/<int:card_id>')
+def delete_card(card_id):
+    card = Card.query.get(card_id)
+    db.session.delete(card)
+    db.session.commit()
+    return redirect(url_for('admin_carte_page'))
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -230,6 +249,7 @@ def Admin_créer_carte():
 def admin_carte_page():
     cards = Card.query.all()
     return render_template('Admin_carte_page.html', cards=cards)
+
 
 @app.route('/preview/edit')
 def edit():
