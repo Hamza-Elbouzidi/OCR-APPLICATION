@@ -9,20 +9,23 @@ body {
 .container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align items to the top */
     min-height: 100vh;
+    padding: 20px; /* Padding around the content */
 }
 
 .content-wrapper {
     background: #ffffff;
-    width: 90%;
-    max-width: 700px;
+    width: 100%;
+    max-width: 1500px; /* Increased max-width */
+    max-height: 100vh; /* Set a maximum height */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: left;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin: 0 auto; /* Center content horizontally */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
 }
 
 .content-wrapper h1 {

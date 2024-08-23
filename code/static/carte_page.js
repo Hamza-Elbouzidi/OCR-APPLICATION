@@ -4,52 +4,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteNoButton = document.getElementById('delete-no');
     const editCardModal = document.getElementById('edit-card-modal');
     const editCardForm = document.getElementById('edit-card-form');
-    const closeEditModalButton = document.getElementById('close-edit-modal');
     const createCardModal = document.getElementById('create-card-modal');
     const createCardForm = document.getElementById('create-card-form');
-    const closeCreateModalButton = document.getElementById('close-create-modal');
-    const createCardButton = document.getElementById('btn1');  // Bouton de création de carte
-    const cardsWrapper = document.querySelector('.cards-wrapper');
-    const cardContainer = document.getElementById('card-container');
-    const searchInput = document.getElementById('search-input');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const modalBackdropCreate = document.getElementById('modal-backdrop-create');
+    const btn1 = document.getElementById('btn1');
 
+    let selectedCardElement = null;
 
-    let selectedCard = null;
+    // Create card modal display
+    btn1.addEventListener('click', () => {
+        modalBackdropCreate.style.display = 'block';
+        createCardModal.style.display = 'block';
+    });
 
-    // Fonction pour nettoyer les données JSON
-    // function cleanJsonData(jsonData) {
-    //     return jsonData
-    //         .replace(/[{}]/g, '')   // Supprimer les accolades
-    //         .replace(/\\/g, '')     // Supprimer les barres obliques inverses
-    //         .replace(/"/g, '');     // Supprimer les guillemets doubles
-    //  }
+    document.getElementById('close-create-modal').addEventListener('click', () => {
+        modalBackdropCreate.style.display = 'none';
+        createCardModal.style.display = 'none';
+    });
 
+    // Close edit modal
+    document.getElementById('close-edit-modal').addEventListener('click', () => {
+        modalBackdrop.style.display = 'none';
+        editCardModal.style.display = 'none';
+    });
 
+    function selectCard(cardElement) {
+        selectedCardElement = cardElement;
+        const cardId = cardElement.getAttribute('data-card-id');
+        const cardTitle = cardElement.getAttribute('data-card-title');
+        const cardDescription = cardElement.getAttribute('data-card-description');
+        const cardJsonStructure = cardElement.getAttribute('data-card-json-structure');
 
+        document.getElementById('card-id').value = cardId;
+        document.getElementById('card-title').value = cardTitle;
+        document.getElementById('card-description').value = cardDescription;
+        document.getElementById('card-json-structure').value = cardJsonStructure;
 
-    // function cleanJsonData(jsonData) {
-    //     // Nettoyer la chaîne JSON en supprimant les accolades, barres obliques inverses, et guillemets doubles
-    //     let cleanedData = jsonData
-    //         .replace(/[{}]/g, '')   // Supprimer les accolades
-    //         .replace(/\\/g, '')     // Supprimer les barres obliques inverses
-    //         .replace(/"/g, '');     // Supprimer les guillemets doubles
-    
-    //     // Diviser la chaîne en parties
-    //     let parts = cleanedData.split(',');  // Diviser par les virgules pour obtenir chaque paire clé-valeur
-    //     let keys = [];
-    
-    //     // Extraire les clés
-    //     parts.forEach(part => {
-    //         let [key] = part.split(':');  // Diviser chaque partie par les deux-points
-    //         if (key) {
-    //             keys.push(key.trim());   // Ajouter la clé après avoir supprimé les espaces
-    //         }
-    //     });
-    
-    //     // Retourner uniquement les clés sous forme de chaîne, séparées par des virgules
-    //     return keys.join(', ');
-    // }
+        modalBackdrop.style.display = 'block';
+        editCardModal.style.display = 'block';
+    }
 
+    document.querySelectorAll('.edit-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            selectCard(button.closest('.card'));
+        });
+    });
+
+    document.querySelectorAll('.cancel-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.stopPropagation();
+            confirmDeleteDialog.style.display = 'block';
+        });
+    });
+
+    deleteYesButton.addEventListener('click', () => {
+        if (selectedCardElement) {
+            const cardId = selectedCardElement.getAttribute('data-card-id');
+            window.location.href = `/delete_card/${cardId}`;
+        }
+    });
+
+    deleteNoButton.addEventListener('click', () => {
+        confirmDeleteDialog.style.display = 'none';
+    });
 
     function cleanJsonData(jsonData) {
         // Nettoyer la chaîne JSON en supprimant les accolades, barres obliques inverses, et guillemets doubles
